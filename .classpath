@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" output="classes" path="src"/>
+	<classpathentry kind="src" output="classes.test" path="test"/>
+	<classpathentry kind="src" path="generated"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="lib" path="lib/gson-2.2.2.jar"/>
+	<classpathentry kind="lib" path="lib/guava-13.0.1.jar"/>
+	<classpathentry kind="lib" path="lib/logback-classic-1.0.7.jar"/>
+	<classpathentry kind="lib" path="lib/logback-core-1.0.7.jar"/>
+	<classpathentry kind="lib" path="lib/slf4j-api-1.7.1.jar"/>
+	<classpathentry kind="lib" path="lib/smack-3.2.2.jar"/>
+	<classpathentry kind="lib" path="lib/smackx-3.2.2.jar"/>
+	<classpathentry kind="lib" path="lib/svnkit-1.7.5-v1.jar"/>
+	<classpathentry kind="output" path="classes"/>
+</classpath>

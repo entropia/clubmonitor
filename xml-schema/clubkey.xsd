@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+<xs:annotation>
+  <xs:documentation>
+    <![CDATA[
+    Entropia e.V. door control system
+    card lifetime specification
+
+    This scheme deliberately excludes the possibility for a person to have more
+    than one key.
+
+    An example could look like this:
+<?xml version="1.0" encoding="UTF-8"?>
+<card uid="00010203040506">
+  <active>true</active>
+  <picc_key>6997FA088A3E9079B609B85CC81844C5</picc_key>
+  <ca0523_master_key>13F64D4F452FEBB56010F8A981CC82FB</ca0523_master_key>
+  <ca0523_door_key>D7001CF78B91CBEF6350EB25832E17F3</ca0523_door_key>
+  
+  <!-- notbefore and notafter are optional -->
+  <notbefore>2011-11-13T04:47:41+01:00</notbefore>
+  <notafter>2011-11-14T04:47:41+01:00</notafter>
+
+  <!--  
+  <personal>
+    <name>donald duck</name>
+    <sponsors>
+      <name>mickey mouse</name>
+      <name>goofy</name>
+    </sponsors>
+  </personal>
+  -->
+  <!-- OR -->
+  <nonpersonal comment="gpn-key">
+    <issuer>hannes</issuer>
+  </nonpersonal>
+</card>
+    ]]>
+  </xs:documentation>
+</xs:annotation>
+
+<xs:element name="card" type="card"/>
+
+<xs:complexType name="personal">
+  <xs:sequence>
+    <xs:element name="name" type="xs:string"/>
+    <xs:element name="sponsors" type="sponsors"/>
+  </xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="sponsors">
+  <xs:sequence>
+    <xs:element name="name" type="xs:string" minOccurs="1"
+		maxOccurs="unbounded"/>
+  </xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="nonpersonal">
+  <xs:sequence>
+    <xs:element name="issuer" type="xs:string" minOccurs="1" maxOccurs="unbounded"/>
+  </xs:sequence>
+  <xs:attribute name="comment" type="xs:string" use="required"/>  
+</xs:complexType>
+
+<xs:group name="owner">
+  <xs:choice>
+    <xs:element name="nonpersonal" type="nonpersonal"/>
+    <xs:element name="personal" type="personal"/>
+  </xs:choice>
+</xs:group>
+
+<xs:complexType name="card">
+  <xs:sequence>
+    <xs:element name="active" type="xs:boolean"/>
+    <xs:element name="picc_key" type="picc_key"/>
+    <xs:element name="ca0523_master_key" type="ca0523_master_key"/>
+    <xs:element name="ca0523_door_key" type="ca0523_door_key"/>
+    <xs:element name="notbefore" type="xs:dateTime" minOccurs="0" maxOccurs="1"/>
+    <xs:element name="notafter" type="xs:dateTime" minOccurs="0" maxOccurs="1"/>
+    <xs:group ref="owner"/>
+  </xs:sequence>
+  <xs:attribute name="uid" type="uid" use="required"/>
+</xs:complexType>
+
+<xs:simpleType name="uid">
+  <xs:restriction base="xs:string">
+    <xs:pattern value="[A-Z0-9]{14}"/>
+  </xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name="picc_key">
+  <xs:restriction base="xs:string">
+    <xs:pattern value="[A-Z0-9]{32}"/>
+  </xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name="ca0523_master_key">
+  <xs:restriction base="xs:string">
+    <xs:pattern value="[A-Z0-9]{32}"/>
+  </xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name="ca0523_door_key">
+  <xs:restriction base="xs:string">
+    <xs:pattern value="[A-Z0-9]{32}"/>
+  </xs:restriction>
+</xs:simpleType>
+
+</xs:schema>

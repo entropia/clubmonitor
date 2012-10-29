@@ -1,0 +1,13 @@
+.*
+*.orig
+*~
+\#*#
+
+!.gitignore
+!/.classpath
+
+/classes
+/classes.test
+/generated
+/dist
+/config

@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="ClubMonitor" default="dist" basedir=".">
+	<description>
+		monitors and handles club related events
+	</description>
+
+	<property name="dist" value="${basedir}/dist/" />
+	<property name="src-dir" value="${basedir}/src/" />
+	<property name="src-test-dir" value="${basedir}/test/" />
+	<property name="build-dir" value="${basedir}/classes/" />
+	<property name="build-test-dir" value="${basedir}/classes.test/" />
+	<property name="lib-dir" value="${basedir}/lib/" />
+	<property name="lib-test-dir" value="${basedir}/lib.test/" />
+	<property name="generated-dir" value="${basedir}/generated/" />
+	
+	<path id="ClubMonitor.Classpath">
+		<fileset dir="${lib-dir}">
+			<include name="*.jar" />
+		</fileset>
+	</path>
+
+	<path id="ClubMonitorTest.Classpath">
+		<pathelement location="${build-dir}" />
+		<path refid="ClubMonitor.Classpath" />
+		<fileset dir="${lib-test-dir}">
+			<include name="*.jar" />
+		</fileset>
+	</path>
+		
+	<target name="init">
+		<tstamp />
+		<mkdir dir="${build-dir}" />
+		<mkdir dir="${build-test-dir}" />
+		<mkdir dir="${dist}" />
+		<mkdir dir="${generated-dir}" />
+	</target>
+
+	<target name="clean">
+		<delete dir="${build-dir}" />
+		<delete dir="${build-test-dir}" />
+		<delete dir="${dist}" />
+		<delete dir="${generated-dir}" />
+	</target>
+
+	<target name="xjc">
+		<exec executable="xjc">
+			<arg value="-d" />
+			<arg value="${generated-dir}" />
+			<arg value="-p" />
+			<arg value="entropia.clubmonitor.xml.clubkey" />
+			<arg value="${basedir}/xml-schema/clubkey.xsd" />
+		</exec>
+	</target>
+	
+	<target name="build" depends="init,xjc">
+		<javac srcdir="${generated-dir}" destdir="${build-dir}"
+			classpathref="ClubMonitor.Classpath" includeantruntime="false"
+			listfiles="true" verbose="false"
+			debug="true" debuglevel="lines,vars,source"
+			source="6" target="6"
+			/>
+		<javac srcdir="${src-dir}" destdir="${build-dir}"
+			classpathref="ClubMonitor.Classpath" includeantruntime="false"
+			listfiles="true" verbose="false"
+			debug="true" debuglevel="lines,vars,source"
+			source="6" target="6"
+			/>
+		<copy file="${basedir}/xml-schema/clubkey.xsd"
+			todir="${build-dir}/entropia/clubmonitor/clubkey/" />
+	</target>
+
+	<target name="build-test" depends="build">
+		<javac srcdir="${src-test-dir}" destdir="${build-test-dir}"
+			classpathref="ClubMonitorTest.Classpath" includeantruntime="false"
+			listfiles="true" verbose="false"
+			debug="true" debuglevel="lines,vars,source"
+			source="6" target="6"
+			/>
+	</target>
+
+	<target name="test-run" depends="build-test">
+		<junit printsummary="true" fork="true">
+			<classpath refid="ClubMonitorTest.Classpath" />
+			<classpath path="${build-test-dir}" />
+			<formatter type="plain" usefile="false" />
+			<batchtest>
+				<fileset dir="${build-test-dir}">
+					<include name="**/*.class" />
+					<!-- XXX: no inner classes -->
+					<exclude name="**/*$*.class"/>
+				</fileset>
+			</batchtest>
+		</junit>
+	</target>
+
+	<target name="dist" depends="test-run">
+		<jar destfile="${dist}/${ant.project.name}.jar">
+			<fileset dir="${build-dir}" />
+			<!-- use jar in jars -->
+			<!--
+			<archives>
+				<zips>
+					<path refid="ClubMonitor.Classpath" />
+				</zips>
+			</archives>
+			-->
+			<manifest>
+				<attribute name="Main-Class"
+					value="entropia.clubmonitor.ClubMonitor" />
+				<section name="Club-Monitor">
+					<!-- change version here -->
+					<attribute name="Version" value="1.0" />
+				</section>
+			</manifest>
+		</jar>
+	</target>
+</project>
