@@ -289,9 +289,12 @@ final class WebServer {
         if (contentLength == null) {
             return;
         }
-        final Integer size = Integer.parseInt(contentLength);
-        if (size != 0) {
-            throw new IllegalArgumentException("non-empty http content");
+        try {
+            if (Integer.parseInt(contentLength) != 0) {
+        	throw new IllegalArgumentException("non-empty http content");
+            }
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException(e);
         }
     }
 }
