@@ -3,6 +3,8 @@ package entropia.clubmonitor;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedList;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,13 +15,18 @@ public abstract class Trigger {
     private static final Logger logger = LoggerFactory.getLogger(Trigger.class);
     
     
-    public static Collection<? extends Trigger> trigger =
-	    Arrays.asList(
+    public final static Collection<Trigger> trigger;
+    static {
+	final Collection<Trigger> c = new LinkedList<Trigger>(Arrays.asList(
 	            new ClubKeyTransition(),
 		    new ClubStatusTransition(),
-		    new MulticastNotifier(),
 		    new XMPPNotifier(),
-		    new MpdNotifier());
+		    new MpdNotifier()));
+	if (Config.isMulticastEnabled()) {
+	    c.add(new MulticastNotifier());
+	}
+	trigger = Collections.unmodifiableCollection(c);
+    }
     
     private final boolean handleNonPublic;
     
