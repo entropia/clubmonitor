@@ -25,7 +25,9 @@ public final class ClubMonitor {
 	SSLConfig.setupSSL();
 	TernaryStatusRegister.OVERRIDE_WINDOWS.off();
 	
-	netioPoller = HauptRaumNetIOHandler.startNetIOPoller(SYNC_SERVICE);
+	if (Config.isNetIOEnabled()) {
+	    netioPoller = HauptRaumNetIOHandler.startNetIOPoller(SYNC_SERVICE);
+	}
 	if (Config.isXMPPEnabled()) {
 	    xmppThread = XMPPThread.startXMPPThread();
 	    fileHandlerThread = FileHandlerThread.startFileHandlerThread();

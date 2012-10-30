@@ -16,9 +16,12 @@ import com.google.common.base.Joiner;
 import com.google.common.net.InetAddresses;
 
 public enum Config {
+    CLUB_MONITOR_WEBSERVER_TCPPORT,
+    
+    CLUB_MONITOR_NETIO_ENABLE,
     CLUB_MONITOR_NETIO_IPADDRESS,
     CLUB_MONITOR_NETIO_TCPPORT,
-    CLUB_MONITOR_WEBSERVER_TCPPORT,
+    
     CLUB_MONITOR_MULTICAST_ADDRESS,
     CLUB_MONITOR_MULTICAST_PORT,
     CLUB_MONITOR_MULTICAST_TTL,
@@ -91,8 +94,9 @@ public enum Config {
     }
 
     private static void checkConfig() {
-	checkNotNull(getNetIOAddress());
 	checkNotNull(getWebServerPort());
+	checkNotNull(isNetIOEnabled());
+	checkNotNull(getNetIOAddress());
 	checkNotNull(getSecureWebServerPort());
 	checkNotNull(getMulticastAddress());
 	checkNotNull(getMulticastTTL());
@@ -133,6 +137,11 @@ public enum Config {
     }
     
     /************** HELPER **************/
+    public static boolean isNetIOEnabled() {
+	return Boolean.parseBoolean(PROPERTIES.getProperty(
+		CLUB_MONITOR_NETIO_ENABLE.toString()));
+    }
+    
     public static InetSocketAddress getNetIOAddress() {
 	final InetAddress ip = InetAddresses.forString(
 		PROPERTIES.getProperty(CLUB_MONITOR_NETIO_IPADDRESS.toString()));
