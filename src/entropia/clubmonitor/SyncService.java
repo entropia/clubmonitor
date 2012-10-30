@@ -9,7 +9,7 @@ public class SyncService {
     private final ArrayBlockingQueue<SyncElement> blockQ =
             new ArrayBlockingQueue<SyncElement>(1, false);
     
-    synchronized void sleepUntilEvent(long sleepTime)
+    void sleepUntilEvent(long sleepTime)
             throws InterruptedException {
         blockQ.poll(sleepTime, TimeUnit.MILLISECONDS);
     }
