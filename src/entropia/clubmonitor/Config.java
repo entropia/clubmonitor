@@ -27,16 +27,20 @@ public enum Config {
     @Default("8080")
     CLUB_MONITOR_WEBSERVER_TCPPORT,
     
+    @BooleanTest
     @Default("false")
     CLUB_MONITOR_NETIO_ENABLE,
+    @IPAddrTest
     @MaybeNullIfFalse(CLUB_MONITOR_NETIO_ENABLE)
     CLUB_MONITOR_NETIO_IPADDRESS,
     @IntegerTest
     @MaybeNullIfFalse(CLUB_MONITOR_NETIO_ENABLE)
     CLUB_MONITOR_NETIO_TCPPORT,
     
+    @BooleanTest
     @Default("false")
     CLUB_MONITOR_MULTICAST_ENABLED,
+    @IPAddrTest
     @MaybeNullIfFalse(CLUB_MONITOR_MULTICAST_ENABLED)
     CLUB_MONITOR_MULTICAST_ADDRESS,
     @IntegerTest
@@ -50,6 +54,7 @@ public enum Config {
     CLUB_MONITOR_MULTICAST_RESEND_SECONDS,
     
     /* XMPP */
+    @BooleanTest
     @Default("false")
     CLUB_MONITOR_XMPP_ENABLED,
     @MaybeNullIfFalse(CLUB_MONITOR_XMPP_ENABLED)
@@ -65,6 +70,7 @@ public enum Config {
     CLUB_MONITOR_XMPP_PORT,
     @MaybeNullIfFalse(CLUB_MONITOR_XMPP_ENABLED)
     CLUB_MONITOR_XMPP_RESOURCE,
+    @BooleanTest
     @MaybeNullIfFalse(CLUB_MONITOR_XMPP_ENABLED)
     CLUB_MONITOR_XMPP_MUC_ENABLED,
     @MaybeNullIfFalse(CLUB_MONITOR_XMPP_ENABLED)
@@ -80,8 +86,12 @@ public enum Config {
     @MaybeNull
     CLUB_KEY_API_PASSWORD,
     
+    @BooleanTest
     @Default("false")
     CLUB_MONITOR_SSL_ENABLED,
+    @IntegerTest
+    @MaybeNullIfFalse(CLUB_MONITOR_SSL_ENABLED)
+    CLUB_MONITOR_SECURE_WEBSERVER_TCPPORT,
     @FileTest
     @MaybeNullIfFalse(CLUB_MONITOR_SSL_ENABLED)
     CLUB_KEY_KEY_STORE,
@@ -90,13 +100,12 @@ public enum Config {
     CLUB_KEY_TRUST_STORE,
     @MaybeNullIfFalse(CLUB_MONITOR_SSL_ENABLED)
     CLUB_KEY_STORE_PW,
-    @IntegerTest
-    @MaybeNullIfFalse(CLUB_MONITOR_SSL_ENABLED)
-    CLUB_MONITOR_SECURE_WEBSERVER_TCPPORT,
     
     /* music player daemon */
+    @BooleanTest
     @Default("false")
     MPD_ENABLE,
+    @IPAddrTest
     @MaybeNullIfFalse(MPD_ENABLE)
     MPD_ADDRESS,
     @IntegerTest
