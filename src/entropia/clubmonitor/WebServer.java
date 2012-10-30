@@ -54,7 +54,7 @@ final class WebServer {
 	this.syncService = syncService;
     }
     
-    private void init(SyncService syncService) throws Exception {
+    private void init() throws Exception {
 	server = HttpServer.create(Config.getWebServerPort(), 0);
 	final Executor httpExecutor = newExecutor();
         server.setExecutor(httpExecutor);
@@ -97,7 +97,7 @@ final class WebServer {
 	if (initialized) {
 	    throw new IllegalStateException("already initialized");
 	}
-        init(syncService);
+        init();
         server.start();
         serverLogger.info("webserver started");
         if (sslserver != null) {
