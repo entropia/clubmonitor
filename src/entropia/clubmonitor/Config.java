@@ -13,6 +13,7 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
@@ -215,7 +216,21 @@ public enum Config {
 	return false;
     }
     
+    private static void checkUnkownConfigDirectives() {
+	final HashSet<String> set = new HashSet<String>(
+		PROPERTIES.stringPropertyNames());
+	for (Config c : Config.values()) {
+	    set.remove(c.toString());
+	}
+	if (!set.isEmpty()) {
+	    final Joiner joiner = Joiner.on(",").skipNulls();
+	    throw new IllegalArgumentException("unkown config directives: " +
+		    joiner.join(set));
+	}
+    }
+    
     public static void startupCheck() {
+	checkUnkownConfigDirectives();
 	final List<String> errConfigs = new LinkedList<String>();
 	for (final Field f : Config.class.getDeclaredFields()) {
 	    if (!f.isEnumConstant()) {
