@@ -9,6 +9,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public final class ClubMonitor {
+    static {
+	Config.loadDefaults();
+    }
     private static final Logger logger = LoggerFactory.getLogger(ClubMonitor.class);
     private static Thread xmppThread;
     private static Thread fileHandlerThread;

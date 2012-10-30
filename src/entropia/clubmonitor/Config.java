@@ -8,6 +8,7 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.lang.reflect.Field;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.util.Arrays;
@@ -105,8 +106,25 @@ public enum Config {
     
     private static final String NEWLINE = System.getProperty("line.separator");
     private static final Properties PROPERTIES = new Properties();
+    private static boolean configLoaded = false;
+    
+    static void loadDefaults() {
+	for (final Field f : Config.class.getDeclaredFields()) {
+	    if (!f.isEnumConstant() || f.getType() != Config.class) {
+		continue;
+	    }
+	    final Default def = f.getAnnotation(Default.class);
+	    if (def != null) {
+		PROPERTIES.setProperty(f.getName(), def.value());
+	    }
+	}
+    }
     
     public static void load(File configFile) throws IOException {
+	if (configLoaded) {
+	    throw new IllegalStateException();
+	}
+	configLoaded = true;
 	final InputStream inStream = new FileInputStream(configFile);
 	try {
 	    PROPERTIES.load(inStream);
