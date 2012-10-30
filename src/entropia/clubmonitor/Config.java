@@ -21,6 +21,7 @@ import com.google.common.base.Joiner;
 import com.google.common.net.InetAddresses;
 
 public enum Config {
+    @IntegerTest
     @Default("8080")
     CLUB_MONITOR_WEBSERVER_TCPPORT,
     
@@ -28,6 +29,7 @@ public enum Config {
     CLUB_MONITOR_NETIO_ENABLE,
     @MaybeNullIfFalse(CLUB_MONITOR_NETIO_ENABLE)
     CLUB_MONITOR_NETIO_IPADDRESS,
+    @IntegerTest
     @MaybeNullIfFalse(CLUB_MONITOR_NETIO_ENABLE)
     CLUB_MONITOR_NETIO_TCPPORT,
     
@@ -35,10 +37,13 @@ public enum Config {
     CLUB_MONITOR_MULTICAST_ENABLED,
     @MaybeNullIfFalse(CLUB_MONITOR_MULTICAST_ENABLED)
     CLUB_MONITOR_MULTICAST_ADDRESS,
+    @IntegerTest
     @MaybeNullIfFalse(CLUB_MONITOR_MULTICAST_ENABLED)
     CLUB_MONITOR_MULTICAST_PORT,
+    @IntegerTest
     @MaybeNullIfFalse(CLUB_MONITOR_MULTICAST_ENABLED)
     CLUB_MONITOR_MULTICAST_TTL,
+    @IntegerTest
     @MaybeNullIfFalse(CLUB_MONITOR_MULTICAST_ENABLED)
     CLUB_MONITOR_MULTICAST_RESEND_SECONDS,
     
@@ -53,6 +58,7 @@ public enum Config {
     CLUB_MONITOR_XMPP_PASSWORD,
     @MaybeNullIfFalse(CLUB_MONITOR_XMPP_ENABLED)
     CLUB_MONITOR_XMPP_SERVER,
+    @IntegerTest
     @MaybeNullIfFalse(CLUB_MONITOR_XMPP_ENABLED)
     CLUB_MONITOR_XMPP_PORT,
     @MaybeNullIfFalse(CLUB_MONITOR_XMPP_ENABLED)
@@ -82,6 +88,7 @@ public enum Config {
     CLUB_KEY_TRUST_STORE,
     @MaybeNullIfFalse(CLUB_MONITOR_SSL_ENABLED)
     CLUB_KEY_STORE_PW,
+    @IntegerTest
     @MaybeNullIfFalse(CLUB_MONITOR_SSL_ENABLED)
     CLUB_MONITOR_SECURE_WEBSERVER_TCPPORT,
     
@@ -90,6 +97,7 @@ public enum Config {
     MPD_ENABLE,
     @MaybeNullIfFalse(MPD_ENABLE)
     MPD_ADDRESS,
+    @IntegerTest
     @MaybeNullIfFalse(MPD_ENABLE)
     MPD_PORT;
     
@@ -107,6 +115,11 @@ public enum Config {
     @Target(ElementType.FIELD)
     private @interface Default {
 	String value();
+    }
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.FIELD)
+    private @interface IntegerTest {
+	/* EMPTY */
     }
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.FIELD)
@@ -202,6 +215,9 @@ public enum Config {
 		if (f.getAnnotation(DirectoryTest.class) != null) {
 		    directoryTest(name, value);
 		}
+		if (f.getAnnotation(IntegerTest.class) != null) {
+		    integerTest(name, value);
+		}
 	    }
 	}
 	if (!errConfigs.isEmpty()) {
@@ -211,6 +227,14 @@ public enum Config {
 	}
     }
 
+    private static void integerTest(final String c, final String value) {
+	try {
+	    Integer.parseInt(value);
+	} catch (NumberFormatException e) {
+	    throw new IllegalArgumentException(c + ": " + value, e);
+	}
+    }
+    
     private static void fileTest(final String c, final String path) {
 	final File f = new File(path);
 	if (!f.canRead() || !f.isFile()) {
