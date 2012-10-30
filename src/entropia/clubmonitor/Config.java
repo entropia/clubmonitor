@@ -4,6 +4,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.util.Arrays;
@@ -16,43 +20,88 @@ import com.google.common.base.Joiner;
 import com.google.common.net.InetAddresses;
 
 public enum Config {
+    @Default("8080")
     CLUB_MONITOR_WEBSERVER_TCPPORT,
     
+    @Default("false")
     CLUB_MONITOR_NETIO_ENABLE,
+    @MaybeNullIfFalse(CLUB_MONITOR_NETIO_ENABLE)
     CLUB_MONITOR_NETIO_IPADDRESS,
+    @MaybeNullIfFalse(CLUB_MONITOR_NETIO_ENABLE)
     CLUB_MONITOR_NETIO_TCPPORT,
     
+    @MaybeNull
     CLUB_MONITOR_MULTICAST_ADDRESS,
+    @MaybeNull
     CLUB_MONITOR_MULTICAST_PORT,
+    @MaybeNull
     CLUB_MONITOR_MULTICAST_TTL,
+    @MaybeNull
     CLUB_MONITOR_MULTICAST_RESEND_SECONDS,
     
     /* XMPP */
+    @Default("false")
     CLUB_MONITOR_XMPP_ENABLED,
+    @MaybeNullIfFalse(CLUB_MONITOR_XMPP_ENABLED)
     CLUB_MONITOR_XMPP_SERVICE,
+    @MaybeNullIfFalse(CLUB_MONITOR_XMPP_ENABLED)
     CLUB_MONITOR_XMPP_USERNAME,
+    @MaybeNullIfFalse(CLUB_MONITOR_XMPP_ENABLED)
     CLUB_MONITOR_XMPP_PASSWORD,
+    @MaybeNullIfFalse(CLUB_MONITOR_XMPP_ENABLED)
     CLUB_MONITOR_XMPP_SERVER,
+    @MaybeNullIfFalse(CLUB_MONITOR_XMPP_ENABLED)
     CLUB_MONITOR_XMPP_PORT,
+    @MaybeNullIfFalse(CLUB_MONITOR_XMPP_ENABLED)
     CLUB_MONITOR_XMPP_RESOURCE,
+    @MaybeNullIfFalse(CLUB_MONITOR_XMPP_ENABLED)
     CLUB_MONITOR_XMPP_MUC_ENABLED,
+    @MaybeNullIfFalse(CLUB_MONITOR_XMPP_ENABLED)
     CLUB_MONITOR_XMPP_MUC,
+    @MaybeNullIfFalse(CLUB_MONITOR_XMPP_ENABLED)
     CLUB_MONITOR_XMPP_ADMINS,
     
+    @MaybeNull
     CLUB_KEY_SVN_REPO,
+    @MaybeNull
     CLUB_KEY_API_USERNAME,
+    @MaybeNull
     CLUB_KEY_API_PASSWORD,
     
+    @Default("false")
     CLUB_MONITOR_SSL_ENABLED,
+    @MaybeNullIfFalse(CLUB_MONITOR_SSL_ENABLED)
     CLUB_KEY_KEY_STORE,
+    @MaybeNullIfFalse(CLUB_MONITOR_SSL_ENABLED)
     CLUB_KEY_TRUST_STORE,
+    @MaybeNullIfFalse(CLUB_MONITOR_SSL_ENABLED)
     CLUB_KEY_STORE_PW,
+    @MaybeNullIfFalse(CLUB_MONITOR_SSL_ENABLED)
     CLUB_MONITOR_SECURE_WEBSERVER_TCPPORT,
     
     /* music player daemon */
+    @Default("false")
     MPD_ENABLE,
+    @MaybeNullIfFalse(MPD_ENABLE)
     MPD_ADDRESS,
+    @MaybeNullIfFalse(MPD_ENABLE)
     MPD_PORT;
+    
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.FIELD)
+    private @interface MaybeNull {
+	/* EMPTY */
+    }
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.FIELD)
+    private @interface MaybeNullIfFalse {
+	Config value();
+    }
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.FIELD)
+    private @interface Default {
+	String value();
+    }
     
     private static final String NEWLINE = System.getProperty("line.separator");
     private static final Properties PROPERTIES = new Properties();
