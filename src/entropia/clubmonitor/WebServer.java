@@ -277,4 +277,16 @@ final class WebServer {
         exchange.getResponseHeaders().set("Cache-Control", "no-cache, no-store");
         exchange.getResponseHeaders().set("Pragma", "no-cache");
     }
+
+    static void checkEmptyResponse(HttpExchange exchange) {
+        final String contentLength =
+                exchange.getRequestHeaders().getFirst("Content-Length");
+        if (contentLength == null) {
+            return;
+        }
+        final Integer size = Integer.parseInt(contentLength);
+        if (size != 0) {
+            throw new IllegalArgumentException("non-empty http content");
+        }
+    }
 }

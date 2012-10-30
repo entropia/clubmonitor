@@ -46,12 +46,12 @@ final class AuthServer implements HttpHandler {
             }
 	    try {
 		if ("/auth/cardreader/fuckedup".equals(path)) {
-		    checkEmptyResponse(exchange);
+		    WebServer.checkEmptyResponse(exchange);
 		    TernaryStatusRegister.CARDREADER_KAPUTT.on();
 		    sendAnswer(exchange, "");
 		    return;
 		} else if ("/auth/cardreader/fixed".equals(path)) {
-		    checkEmptyResponse(exchange);
+		    WebServer.checkEmptyResponse(exchange);
 		    TernaryStatusRegister.CARDREADER_KAPUTT.off();
 		    sendAnswer(exchange, "");
 		    return;
@@ -105,18 +105,6 @@ final class AuthServer implements HttpHandler {
             logger.warn("exception while handling", e);
             replyWithInternalError(exchange);
         }
-    }
-
-    private void checkEmptyResponse(HttpExchange exchange) {
-	final String contentLength =
-	        exchange.getRequestHeaders().getFirst("Content-Length");
-	if (contentLength == null) {
-	    return;
-	}
-	final Integer size = Integer.parseInt(contentLength);
-	if (size != 0) {
-	    throw new IllegalArgumentException("non-empty http content");
-	}
     }
 
     private void sendAnswer(HttpExchange exchange, final String answer)
