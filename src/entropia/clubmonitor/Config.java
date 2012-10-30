@@ -16,6 +16,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
+import java.util.regex.Pattern;
 
 import com.google.common.base.Joiner;
 import com.google.common.net.InetAddresses;
@@ -118,6 +119,11 @@ public enum Config {
     }
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.FIELD)
+    private @interface BooleanTest {
+	/* EMPTY */
+    }
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.FIELD)
     private @interface IntegerTest {
 	/* EMPTY */
     }
@@ -215,6 +221,9 @@ public enum Config {
 		if (f.getAnnotation(DirectoryTest.class) != null) {
 		    directoryTest(name, value);
 		}
+		if (f.getAnnotation(BooleanTest.class) != null) {
+		    booleanTest(name, value);
+		}
 		if (f.getAnnotation(IntegerTest.class) != null) {
 		    integerTest(name, value);
 		}
@@ -224,6 +233,14 @@ public enum Config {
 	    final Joiner joiner = Joiner.on(",").skipNulls();
 	    throw new IllegalArgumentException(joiner.join(errConfigs)
 		    + " keys not present");
+	}
+    }
+    
+    private static final Pattern BOOLEAN_PATTERN =
+	    Pattern.compile("\\Atrue|false\\z", Pattern.CASE_INSENSITIVE);
+    private static void booleanTest(final String c, final String value) {
+	if (!BOOLEAN_PATTERN.matcher(value).matches()) {
+	    throw new IllegalArgumentException(c + ": " + value);
 	}
     }
 
