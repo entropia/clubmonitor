@@ -182,12 +182,37 @@ public enum Config {
     
     public static String getConfigTemplate() {
         final StringBuilder str = new StringBuilder();
-        for (Config c : Config.values()) {
-            final String key = c.toString();
-            str.append(String.format("%s =", key));
-            str.append(NEWLINE);
+        for (final Field f : Config.class.getDeclaredFields()) {
+            if (!f.isEnumConstant()) {
+        	continue;
+            }
+            final String key = f.getName();
+            final Default def = f.getAnnotation(Default.class);
+            if (def != null && def.value() != null) {
+        	str.append(String.format("%s = %s", key, def.value()));
+        	str.append(NEWLINE);
+            } else if (!maybeNull(f)) {
+        	str.append(String.format("%s =", key));
+        	str.append(NEWLINE);
+            }
         }
         return str.toString();
+    }
+    
+    private static boolean maybeNull(final Field f) {
+	final MaybeNull maybeNull = f.getAnnotation(MaybeNull.class);
+	final MaybeNullIfFalse maybeIff = f.getAnnotation(MaybeNullIfFalse.class);
+	if (maybeNull != null) {
+	    return true;
+	}
+	if (maybeIff != null && maybeIff.value() != null) {
+	    boolean b = Boolean.parseBoolean(PROPERTIES.getProperty(
+		    maybeIff.value().toString()));
+	    if (b == false) {
+		return true;
+	    }
+	}
+	return false;
     }
     
     public static void startupCheck() {

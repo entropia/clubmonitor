@@ -87,7 +87,7 @@ public final class ClubMonitor {
 	    throw new IllegalArgumentException("illegal arguments");
 	}
 	if ("--print-template".equals(args[0])) {
-	    System.out.println(Config.getConfig());
+	    System.out.println(Config.getConfigTemplate());
 	    return;
 	}
 	ClubMonitor.start(new File(args[0]));
