@@ -56,16 +56,19 @@ final class WebServer {
     
     private void init(SyncService syncService) throws Exception {
 	server = HttpServer.create(Config.getWebServerPort(), 0);
-	sslserver = HttpsServer.create(Config.getSecureWebServerPort(), 0);
-	sslserver.setHttpsConfigurator(
-	        new StrictHttpsConfigurator(SSLContext.getDefault()));
 	final Executor httpExecutor = newExecutor();
         server.setExecutor(httpExecutor);
-	sslserver.setExecutor(httpExecutor);
-	setupJsonContext(server.createContext("/"));
-	setupJsonContext(sslserver.createContext("/"));
-	setupAuthServerContext(server.createContext("/auth"));
-	setupAuthServerContext(sslserver.createContext("/auth"));
+        setupJsonContext(server.createContext("/"));
+        setupAuthServerContext(server.createContext("/auth"));
+
+        if (Config.isSSLEnabled()) {
+            sslserver = HttpsServer.create(Config.getSecureWebServerPort(), 0);
+            sslserver.setHttpsConfigurator(
+        	    new StrictHttpsConfigurator(SSLContext.getDefault()));
+            sslserver.setExecutor(httpExecutor);
+            setupJsonContext(sslserver.createContext("/"));
+            setupAuthServerContext(sslserver.createContext("/auth"));
+        }
     }
     
     private void setupAuthServerContext(HttpContext ctx) {
@@ -97,7 +100,9 @@ final class WebServer {
         init(syncService);
         server.start();
         serverLogger.info("webserver started");
-	sslserver.start();
+        if (sslserver != null) {
+            sslserver.start();
+        }
 	serverLogger.info("securewebserver started");
 	initialized = true;
     }

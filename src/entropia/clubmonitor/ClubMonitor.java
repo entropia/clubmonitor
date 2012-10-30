@@ -22,7 +22,9 @@ public final class ClubMonitor {
 	loadConfig(properties);
 	Config.startupCheck();
 	setupPerThreadExceptionHandler();
-	SSLConfig.setupSSL();
+	if (Config.isSSLEnabled()) {
+	    SSLConfig.setupSSL();
+	}
 	TernaryStatusRegister.OVERRIDE_WINDOWS.off();
 	
 	if (Config.isNetIOEnabled()) {

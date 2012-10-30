@@ -43,6 +43,7 @@ public enum Config {
     CLUB_KEY_API_USERNAME,
     CLUB_KEY_API_PASSWORD,
     
+    CLUB_MONITOR_SSL_ENABLED,
     CLUB_KEY_KEY_STORE,
     CLUB_KEY_TRUST_STORE,
     CLUB_KEY_STORE_PW,
@@ -237,6 +238,11 @@ public enum Config {
 
     public static String getKeyAPIPassword() {
         return PROPERTIES.getProperty(CLUB_KEY_API_PASSWORD.toString());
+    }
+    
+    public static boolean isSSLEnabled() {
+	return Boolean.parseBoolean(PROPERTIES.getProperty(
+		CLUB_MONITOR_SSL_ENABLED.toString()));
     }
     
     public static File getKeyKeyStore() {
