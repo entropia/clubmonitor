@@ -138,6 +138,11 @@ public enum Config {
     private @interface FileTest {
 	/* EMPTY */
     }
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.FIELD)
+    private @interface IPAddrTest {
+	/* EMPTY */
+    }
     
     private static final String NEWLINE = System.getProperty("line.separator");
     private static final Properties PROPERTIES = new Properties();
@@ -267,6 +272,9 @@ public enum Config {
 		if (f.getAnnotation(IntegerTest.class) != null) {
 		    integerTest(name, value);
 		}
+		if (f.getAnnotation(IPAddrTest.class) != null) {
+		    ipaddrTest(name, value);
+		}
 	    }
 	}
 	if (!errConfigs.isEmpty()) {
@@ -306,6 +314,14 @@ public enum Config {
 	}
     }
 
+    private static void ipaddrTest(final String c, final String ip) {
+	try {
+	    InetAddresses.forString(ip);
+	} catch (IllegalArgumentException e) {
+	    throw new IllegalArgumentException(c + ": " + ip, e);
+	}
+    }
+    
     /************** HELPER **************/
     public static boolean isNetIOEnabled() {
 	return Boolean.parseBoolean(PROPERTIES.getProperty(
