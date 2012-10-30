@@ -64,6 +64,7 @@ public enum Config {
     @MaybeNullIfFalse(CLUB_MONITOR_XMPP_ENABLED)
     CLUB_MONITOR_XMPP_ADMINS,
     
+    @DirectoryTest
     @MaybeNull
     CLUB_KEY_SVN_REPO,
     @MaybeNull
@@ -73,8 +74,10 @@ public enum Config {
     
     @Default("false")
     CLUB_MONITOR_SSL_ENABLED,
+    @FileTest
     @MaybeNullIfFalse(CLUB_MONITOR_SSL_ENABLED)
     CLUB_KEY_KEY_STORE,
+    @FileTest
     @MaybeNullIfFalse(CLUB_MONITOR_SSL_ENABLED)
     CLUB_KEY_TRUST_STORE,
     @MaybeNullIfFalse(CLUB_MONITOR_SSL_ENABLED)
@@ -169,64 +172,59 @@ public enum Config {
     }
     
     public static void startupCheck() {
-	final List<String> notPresent = new LinkedList<String>();
-	for (Config c : Config.values()) {
-	    String key = c.toString();
-	    if (!PROPERTIES.containsKey(key)) {
-		notPresent.add(key);
+	final List<String> errConfigs = new LinkedList<String>();
+	for (final Field f : Config.class.getDeclaredFields()) {
+	    if (!f.isEnumConstant()) {
+		continue;
+	    }
+	    final String name = f.getName();
+	    final String value = PROPERTIES.getProperty(f.getName());
+	    if (value == null) {
+		if (f.getAnnotation(MaybeNull.class) != null) {
+		    // config maybe null
+		    continue;
+		}
+		final MaybeNullIfFalse annotation = f
+			.getAnnotation(MaybeNullIfFalse.class);
+		if (annotation != null) {
+		    boolean b = Boolean.parseBoolean(PROPERTIES
+			    .getProperty(annotation.value().toString()));
+		    if (b != false) {
+			errConfigs.add(name);
+		    }
+		    continue;
+		}
+		errConfigs.add(name);
+	    } else {
+		if (f.getAnnotation(FileTest.class) != null) {
+		    fileTest(name, value);
+		}
+		if (f.getAnnotation(DirectoryTest.class) != null) {
+		    directoryTest(name, value);
+		}
 	    }
 	}
-	if (!notPresent.isEmpty()) {
+	if (!errConfigs.isEmpty()) {
 	    final Joiner joiner = Joiner.on(",").skipNulls();
-	    throw new IllegalArgumentException(joiner.join(notPresent)
+	    throw new IllegalArgumentException(joiner.join(errConfigs)
 		    + " keys not present");
 	}
-	checkConfig();
     }
 
-    private static void checkConfig() {
-	checkNotNull(getWebServerPort());
-	checkNotNull(isNetIOEnabled());
-	checkNotNull(getNetIOAddress());
-	checkNotNull(getSecureWebServerPort());
-	checkNotNull(getMulticastAddress());
-	checkNotNull(getMulticastTTL());
-	checkNotNull(getMulticastResendSeconds());
-	checkNotNull(isXMPPEnabled());
-	checkNotNull(getXMPPHost());
-	checkNotNull(getXMPPService());
-	checkNotNull(getXMPPPort());
-	checkNotNull(getXMPPUsername());
-	checkNotNull(getXMPPPassword());
-	checkNotNull(getXMPPResource());
-	checkNotNull(isXMPPMUCEnabled());
-	checkNotNull(getXMPPMUC());
-	checkNotNull(getKeyAPIUsername());
-	checkNotNull(getKeyAPIPassword());
-	checkNotNull(getKeyStorePw());
-	checkNotNull(isMPDEnabled());
-	checkNotNull(getMPDAddress());
-	checkNotNull(getXMPPAdmins());
-	
-	if (!getSVNRepo().canRead() || !getSVNRepo().isDirectory()) {
-	    throw new IllegalArgumentException(CLUB_KEY_SVN_REPO.toString());
-	}
-	
-	if (!getKeyKeyStore().canRead() || !getKeyKeyStore().isFile()) {
-	    throw new IllegalArgumentException(CLUB_KEY_KEY_STORE.toString());
-	}
-	
-	if (!getKeyTrustStore().canRead() || !getKeyTrustStore().isFile()) {
-	    throw new IllegalArgumentException(CLUB_KEY_TRUST_STORE.toString());
-	}
-    }
-
-    private static void checkNotNull(Object o) {
-	if (o == null) {
-	    throw new IllegalArgumentException();
+    private static void fileTest(final String c, final String path) {
+	final File f = new File(path);
+	if (!f.canRead() || !f.isFile()) {
+	    throw new IllegalArgumentException(c + ": " + f.getAbsolutePath());
 	}
     }
     
+    private static void directoryTest(final String c, final String path) {
+	final File d = new File(path);
+	if (!d.canRead() || !d.isDirectory()) {
+	    throw new IllegalArgumentException(c + ": " + d.getAbsolutePath());
+	}
+    }
+
     /************** HELPER **************/
     public static boolean isNetIOEnabled() {
 	return Boolean.parseBoolean(PROPERTIES.getProperty(
