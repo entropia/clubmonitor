@@ -31,13 +31,15 @@ public enum Config {
     @MaybeNullIfFalse(CLUB_MONITOR_NETIO_ENABLE)
     CLUB_MONITOR_NETIO_TCPPORT,
     
-    @MaybeNull
+    @Default("false")
+    CLUB_MONITOR_MULTICAST_ENABLED,
+    @MaybeNullIfFalse(CLUB_MONITOR_MULTICAST_ENABLED)
     CLUB_MONITOR_MULTICAST_ADDRESS,
-    @MaybeNull
+    @MaybeNullIfFalse(CLUB_MONITOR_MULTICAST_ENABLED)
     CLUB_MONITOR_MULTICAST_PORT,
-    @MaybeNull
+    @MaybeNullIfFalse(CLUB_MONITOR_MULTICAST_ENABLED)
     CLUB_MONITOR_MULTICAST_TTL,
-    @MaybeNull
+    @MaybeNullIfFalse(CLUB_MONITOR_MULTICAST_ENABLED)
     CLUB_MONITOR_MULTICAST_RESEND_SECONDS,
     
     /* XMPP */
@@ -239,6 +241,12 @@ public enum Config {
                         CLUB_MONITOR_SECURE_WEBSERVER_TCPPORT.toString())));
     }
 
+
+    public static boolean isMulticastEnabled() {
+	return Boolean.parseBoolean(PROPERTIES.getProperty(
+		CLUB_MONITOR_MULTICAST_ENABLED.toString()));
+    }
+    
     public static InetSocketAddress getMulticastAddress() {
 	return new InetSocketAddress(InetAddresses.forString(
 		PROPERTIES.getProperty(CLUB_MONITOR_MULTICAST_ADDRESS.toString())),
