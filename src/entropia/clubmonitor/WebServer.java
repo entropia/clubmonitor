@@ -127,6 +127,9 @@ final class WebServer {
     static void replyWithNotFound(HttpExchange exchange) throws IOException {
         replyWithInt(exchange, 404);
     }
+
+    static void replyWithOk(HttpExchange exchange) throws IOException {
+        replyWithInt(exchange, 200);
     }
     
     private static Executor newExecutor() {
