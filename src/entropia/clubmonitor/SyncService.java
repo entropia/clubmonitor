@@ -14,7 +14,11 @@ public class SyncService {
         blockQ.poll(sleepTime, TimeUnit.MILLISECONDS);
     }
     
-    void forceUpdate() throws InterruptedException {
-        blockQ.offer(SyncElement.SELEM, 0, TimeUnit.NANOSECONDS);
+    void forceUpdate() {
+        try {
+            blockQ.offer(SyncElement.SELEM, 0, TimeUnit.NANOSECONDS);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
     }
 }
