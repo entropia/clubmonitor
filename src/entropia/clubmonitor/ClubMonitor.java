@@ -21,8 +21,12 @@ public final class ClubMonitor {
     
     private static final SyncService SYNC_SERVICE = new SyncService();
     
-    public static void start(File properties) throws Exception {
-	loadConfig(properties);
+    public static void start(String[] args) throws Exception {
+	if (args.length == 1) {
+	    loadConfig(new File(args[0]));
+	} else if (args.length > 1) {
+	    throw new IllegalArgumentException();
+	}
 	Config.startupCheck();
 	setupPerThreadExceptionHandler();
 	if (Config.isSSLEnabled()) {
@@ -56,8 +60,7 @@ public final class ClubMonitor {
 
     private static void loadConfig(File properties) throws IOException {
 	if (!properties.canRead() || !properties.isFile()) {
-	    throw new IllegalArgumentException("config file could not be read -"
-	    		+ " using defaults");
+	    throw new IllegalArgumentException("config file could not be read");
 	}
 	Config.load(properties);
     }
@@ -83,13 +86,10 @@ public final class ClubMonitor {
     
     public static void main(String[] args) throws Exception {
         Locale.setDefault(Locale.US);
-	if (args.length != 1) {
-	    throw new IllegalArgumentException("illegal arguments");
-	}
-	if ("--print-template".equals(args[0])) {
+	if (args.length == 1 && "--print-template".equals(args[0])) {
 	    System.out.println(Config.getConfigTemplate());
 	    return;
 	}
-	ClubMonitor.start(new File(args[0]));
+	ClubMonitor.start(args);
     }
 }
