@@ -102,32 +102,31 @@ final class WebServer {
 	initialized = true;
     }
 
-    static void replyWithInternalError(HttpExchange exchange)
+    private static void replyWithInt(HttpExchange exchange, int err)
             throws IOException {
-        disableCaching(exchange);
-        exchange.sendResponseHeaders(500, -1);
-        exchange.getResponseBody().close();
+        try {
+            disableCaching(exchange);
+            exchange.sendResponseHeaders(err, -1);
+        } finally {
+            exchange.getResponseBody().close();
+        }
     }
     
-    static void replyWithForbidden(HttpExchange exchange)
-        throws IOException {
-        disableCaching(exchange);
-        exchange.sendResponseHeaders(403, -1);
-        exchange.getResponseBody().close();
+    static void replyWithInternalError(HttpExchange exchange) throws IOException {
+        replyWithInt(exchange, 500);
     }
     
-    static void replyWithBadRequest(HttpExchange exchange)
-        throws IOException {
-        disableCaching(exchange);
-        exchange.sendResponseHeaders(400, -1);
-        exchange.getResponseBody().close();
+    static void replyWithForbidden(HttpExchange exchange) throws IOException {
+        replyWithInt(exchange, 403);
     }
     
-    static void replyWithNotFound(HttpExchange exchange)
-            throws IOException {
-        disableCaching(exchange);
-        exchange.sendResponseHeaders(404, -1);
-        exchange.getResponseBody().close();
+    static void replyWithBadRequest(HttpExchange exchange) throws IOException {
+        replyWithInt(exchange, 400);
+    }
+
+    static void replyWithNotFound(HttpExchange exchange) throws IOException {
+        replyWithInt(exchange, 404);
+    }
     }
     
     private static Executor newExecutor() {
