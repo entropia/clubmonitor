@@ -105,6 +105,16 @@ public enum Config {
     private @interface Default {
 	String value();
     }
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.FIELD)
+    private @interface DirectoryTest {
+	/* EMPTY */
+    }
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.FIELD)
+    private @interface FileTest {
+	/* EMPTY */
+    }
     
     private static final String NEWLINE = System.getProperty("line.separator");
     private static final Properties PROPERTIES = new Properties();
