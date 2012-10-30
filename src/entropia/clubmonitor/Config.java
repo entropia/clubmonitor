@@ -106,6 +106,17 @@ public enum Config {
     private static final String NEWLINE = System.getProperty("line.separator");
     private static final Properties PROPERTIES = new Properties();
     
+    public static void load(File configFile) throws IOException {
+	final InputStream inStream = new FileInputStream(configFile);
+	try {
+	    PROPERTIES.load(inStream);
+	} catch (IOException e) {
+	    throw new IOException("error reading config file", e);
+	} finally {
+	    inStream.close();
+	}
+    }
+    
     public static String getConfig() {
 	final StringBuilder str = new StringBuilder();
 	for (Config c : Config.values()) {
@@ -225,17 +236,6 @@ public enum Config {
     public static int getMulticastResendSeconds() {
 	return Integer.parseInt(PROPERTIES.getProperty(
 		CLUB_MONITOR_MULTICAST_RESEND_SECONDS.toString()));
-    }
-    
-    public static void load(File configFile) throws IOException {
-	final InputStream inStream = new FileInputStream(configFile);
-	try {
-	    PROPERTIES.load(inStream);
-	} catch (IOException e) {
-	    throw new IOException("error reading config file", e);
-	} finally {
-	    inStream.close();
-	}
     }
 
     public static boolean isXMPPEnabled() {
