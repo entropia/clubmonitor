@@ -17,6 +17,7 @@ public final class ClubMonitor {
     private static Thread fileHandlerThread;
     private static Thread netioPoller;
     private static Thread mpdThread;
+    private static Thread clubBusTriggerThread;
     private static WebServer webServer;
     
     private static final SyncService SYNC_SERVICE = new SyncService();
@@ -43,6 +44,9 @@ public final class ClubMonitor {
 	}
 	if (Config.isMPDEnabled()) {
 	    mpdThread = MpdNotifier.startMpdNotifierThread();
+	}
+	if (Config.isClubBusEnabled()) {
+	    clubBusTriggerThread = ClubBusTrigger.startClubBusTrigger();
 	}
 	webServer = new WebServer(SYNC_SERVICE);
 	webServer.startWebServer();
@@ -81,6 +85,9 @@ public final class ClubMonitor {
 	}
 	if (webServer != null) {
 	    webServer.stopWebServer();
+	}
+	if (clubBusTriggerThread != null) {
+	    clubBusTriggerThread.interrupt();
 	}
     }
     

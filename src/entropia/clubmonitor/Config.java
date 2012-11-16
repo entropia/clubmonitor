@@ -11,6 +11,8 @@ import java.lang.annotation.Target;
 import java.lang.reflect.Field;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -110,7 +112,15 @@ public enum Config {
     MPD_ADDRESS,
     @IntegerTest
     @MaybeNullIfFalse(MPD_ENABLE)
-    MPD_PORT;
+    MPD_PORT,
+    
+    @BooleanTest
+    @Default("false")
+    CLUB_BUS_ENABLE,
+    @URLTest
+    @MaybeNullIfFalse(CLUB_BUS_ENABLE)
+    CLUB_BUS_URL
+    ;
     
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.FIELD)
@@ -150,6 +160,11 @@ public enum Config {
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.FIELD)
     private @interface IPAddrTest {
+	/* EMPTY */
+    }
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.FIELD)
+    private @interface URLTest {
 	/* EMPTY */
     }
     
@@ -284,6 +299,9 @@ public enum Config {
 		if (f.getAnnotation(IPAddrTest.class) != null) {
 		    ipaddrTest(name, value);
 		}
+		if (f.getAnnotation(URLTest.class) != null) {
+		    urlTest(name, value);
+		}
 	    }
 	}
 	if (!errConfigs.isEmpty()) {
@@ -292,7 +310,7 @@ public enum Config {
 		    + " keys not present");
 	}
     }
-    
+
     private static final Pattern BOOLEAN_PATTERN =
 	    Pattern.compile("\\Atrue|false\\z", Pattern.CASE_INSENSITIVE);
     private static void booleanTest(final String c, final String value) {
@@ -328,6 +346,14 @@ public enum Config {
 	    InetAddresses.forString(ip);
 	} catch (IllegalArgumentException e) {
 	    throw new IllegalArgumentException(c + ": " + ip, e);
+	}
+    }
+    
+    private static void urlTest(String name, String value) {
+	try {
+	    new URL(value);
+	} catch (MalformedURLException e) {
+	    throw new IllegalArgumentException(name + ": " + value, e);
 	}
     }
     
@@ -463,5 +489,21 @@ public enum Config {
 	    return Collections.emptyList();
 	}
 	return Collections.unmodifiableList(Arrays.asList(property.split(",")));
+    }
+
+    public static boolean isClubBusEnabled() {
+	return Boolean.parseBoolean(PROPERTIES.getProperty(CLUB_BUS_ENABLE.toString()));
+    }
+
+    public static URL getClubBusURL() {
+	try {
+	    final String property = PROPERTIES.getProperty(CLUB_BUS_URL.toString());
+	    if (property == null) {
+		return null;
+	    }
+	    return new URL(property);
+	} catch (MalformedURLException e) {
+	    return null;
+	}
     }
 }
