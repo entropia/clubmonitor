@@ -1,7 +1,6 @@
 package entropia.clubmonitor;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.concurrent.LinkedBlockingDeque;
@@ -40,21 +39,16 @@ public class ClubBusTrigger extends PublicOnlyTrigger implements Runnable {
 
     private static void post(final HttpURLConnection con,
 	    final String param) throws IOException {
+	final byte[] paramRaw = param.getBytes(Charsets.UTF_8);
 	con.setDoOutput(true);
-	con.setDoInput(true);
 	con.setInstanceFollowRedirects(false);
 	con.setRequestMethod("POST");
-	con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-	con.setRequestProperty("Charset", "utf-8");
+	con.setRequestProperty("Content-Type",
+		"application/x-www-form-urlencoded; charset=UTF-8");
 	con.setRequestProperty("Content-Length",
-		Integer.toString(param.getBytes(Charsets.UTF_8).length));
+		Integer.toString(paramRaw.length));
 	con.setUseCaches(false);
-	final OutputStream out = con.getOutputStream();
-	try {
-	    out.write(param.getBytes(Charsets.UTF_8));
-	} finally {
-	    out.close();
-	}
+	con.getOutputStream().write(paramRaw);
     }
     
     private static final URL CLUB_BUS_TRIGGER_URL = Config.getClubBusURL();	    
