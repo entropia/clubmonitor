@@ -43,6 +43,7 @@ public class ClubBusTrigger extends PublicOnlyTrigger implements Runnable {
 	final byte[] paramRaw = URLEncoder.encode(param, Charsets.UTF_8.name())
 		.getBytes(Charsets.UTF_8);
 	con.setDoOutput(true);
+	con.setDoInput(true);
 	con.setInstanceFollowRedirects(false);
 	con.setRequestMethod("POST");
 	con.setRequestProperty("Content-Type",
@@ -51,6 +52,10 @@ public class ClubBusTrigger extends PublicOnlyTrigger implements Runnable {
 		Integer.toString(paramRaw.length));
 	con.setUseCaches(false);
 	con.getOutputStream().write(paramRaw);
+	final int responseCode = con.getResponseCode();
+	if (responseCode != 200) {
+	    throw new IOException(con.getResponseMessage());
+	}
     }
     
     private static final URL CLUB_BUS_TRIGGER_URL = Config.getClubBusURL();	    
@@ -61,11 +66,11 @@ public class ClubBusTrigger extends PublicOnlyTrigger implements Runnable {
 	try {
 	    switch (poll) {
 	    case POWER_DOWN:
-		post(con, "power=0");
+		post(con, "0");
 		logger.info("request power down");
 		break;
 	    case POWER_UP:
-		post(con, "power=1");
+		post(con, "1");
 		logger.info("request power up");
 		break;
 	    default:
