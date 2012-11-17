@@ -44,8 +44,6 @@ public class ClubBusTrigger extends PublicOnlyTrigger implements Runnable {
 	con.setDoInput(true);
 	con.setInstanceFollowRedirects(false);
 	con.setRequestMethod("POST");
-	con.setRequestProperty("Content-Length",
-		Integer.toString(paramRaw.length));
 	con.setUseCaches(false);
 	con.getOutputStream().write(paramRaw);
 	final int responseCode = con.getResponseCode();
