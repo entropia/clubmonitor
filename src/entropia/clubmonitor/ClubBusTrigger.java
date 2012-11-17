@@ -48,7 +48,12 @@ public class ClubBusTrigger extends PublicOnlyTrigger implements Runnable {
 	con.getOutputStream().write(paramRaw);
 	final int responseCode = con.getResponseCode();
 	if (responseCode != 200) {
-	    throw new IOException(con.getResponseMessage());
+	    final String responseMessage = con.getResponseMessage();
+	    if (responseMessage != null) {
+		throw new IOException(responseMessage);
+	    } else {
+		throw new IOException("response code: " + responseCode);
+	    }
 	}
     }
     
