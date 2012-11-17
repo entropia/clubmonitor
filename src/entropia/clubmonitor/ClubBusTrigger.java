@@ -3,7 +3,6 @@ package entropia.clubmonitor;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.util.concurrent.LinkedBlockingDeque;
 
 import org.slf4j.Logger;
@@ -40,14 +39,11 @@ public class ClubBusTrigger extends PublicOnlyTrigger implements Runnable {
 
     private static void post(final HttpURLConnection con,
 	    final String param) throws IOException {
-	final byte[] paramRaw = URLEncoder.encode(param, Charsets.UTF_8.name())
-		.getBytes(Charsets.UTF_8);
+	final byte[] paramRaw = param.getBytes(Charsets.UTF_8);
 	con.setDoOutput(true);
 	con.setDoInput(true);
 	con.setInstanceFollowRedirects(false);
 	con.setRequestMethod("POST");
-	con.setRequestProperty("Content-Type",
-		"application/x-www-form-urlencoded; charset=UTF-8");
 	con.setRequestProperty("Content-Length",
 		Integer.toString(paramRaw.length));
 	con.setUseCaches(false);
