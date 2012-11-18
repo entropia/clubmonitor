@@ -108,10 +108,6 @@ final class StatusServer implements HttpHandler {
     
     private static double getTemp() {
         final long l = ADCRegister.Temperature.get();
-        if (l == 0) {
-            return 0.0d;
-        }
-        return -19.70488d * Math.log(1.0d / (0.0048828d * l) - 0.2d)
-                - 56.79574d;
+        return (double)l/10;
     }
 }
