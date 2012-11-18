@@ -83,9 +83,8 @@ public class FhemTrigger extends TimerTask {
     
     private static void updateMeasuredTemp(JsonObject o) {
 	try {
-	    final JsonObject x = walkJson(o, "ResultSet", "Results", "READINGS",
-	            "measured-temp").getAsJsonObject();
-	    final double temp = x.get("VAL").getAsDouble();
+	    final double temp = walkJson(o, "ResultSet", "Results", "READINGS",
+	            "measured-temp", "VAL").getAsDouble();
 	    ADCRegister.Temperature.set(temp);
 	} catch (Exception e) {
 	    logger.warn("updateMeausredTemp", e);
@@ -94,9 +93,8 @@ public class FhemTrigger extends TimerTask {
 
     private static void updateDesiredTemp(JsonObject o) {
 	try {
-	    final JsonObject x = walkJson(o, "ResultSet", "Results",
-		    "READINGS", "desired-temp").getAsJsonObject();
-	    final double temp = x.get("VAL").getAsDouble();
+	    final double temp = walkJson(o, "ResultSet", "Results",
+		    "READINGS", "desired-temp", "VAL").getAsDouble();
 	    ADCRegister.DesiredTemperature.set(temp);
 	} catch (Exception e) {
 	    logger.warn("updateDesiredTemp", e);
