@@ -3,6 +3,8 @@ package entropia.clubmonitor;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
@@ -13,6 +15,8 @@ import org.slf4j.LoggerFactory;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+
+import entropia.clubmonitor.TernaryStatusRegister.RegisterState;
 
 public class FhemTrigger extends TimerTask {
     private static final Logger logger = LoggerFactory.getLogger(FhemTrigger.class);
@@ -27,6 +31,19 @@ public class FhemTrigger extends TimerTask {
 	    try {
 		final InputStreamReader in = new InputStreamReader(c.getInputStream());
 		final JsonObject o = new JsonParser().parse(in).getAsJsonObject();
+		if (TernaryStatusRegister.CLUB_OFFEN.status() == RegisterState.HIGH) {
+		    final Map<String,String> map = new HashMap<String,String>();
+		    map.put("XHR", "1");
+		    map.put("cmd", "set FHT_402e desired-temp 22.0");
+		    WebClient.post(new URL("http://localhost:8083/fhem"), map);
+		} else if (TernaryStatusRegister.CLUB_OFFEN.status() == RegisterState.LOW) {
+		    final Map<String,String> map = new HashMap<String,String>();
+		    map.put("XHR", "1");
+		    map.put("cmd", "set FHT_402e desired-temp 18.0");
+		    WebClient.post(new URL("http://localhost:8083/fhem"), map);
+		} else {
+		    logger.info("CLUB_OFFEN not initialized");
+		}
 		updateMeasuredTemp(o);
 		updateDesiredTemp(o);
 	    } finally {
