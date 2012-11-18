@@ -3,6 +3,7 @@ package entropia.clubmonitor;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -92,5 +93,11 @@ public class WebClient {
             l.add(k + "=" + v);
         }
         return Joiner.on("&").join(l);
+    }
+    
+    public static URL getURL(final URL url, final String... params)
+            throws UnsupportedEncodingException, MalformedURLException {
+        final String p = buildParams(params);
+        return new URL(url, "?" + p);
     }
 }
