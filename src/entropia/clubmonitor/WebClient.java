@@ -1,6 +1,7 @@
 package entropia.clubmonitor;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -34,13 +35,7 @@ public class WebClient {
     
     public static void post(final HttpURLConnection con, final Map<String,String> params)
 	    throws IOException {
-	final List<String> l = new ArrayList<String>(params.size());
-	for (final Map.Entry<String, String> e : params.entrySet()) {
-	    final String k = URLEncoder.encode(e.getKey(), "UTF-8");
-	    final String v = URLEncoder.encode(e.getValue(), "UTF-8");
-	    l.add(k + "=" + v);
-	}
-	final String param = Joiner.on("&").join(l);	
+	final String param = encodeParam(params);
 	post(con, param);
     }
     
@@ -64,4 +59,14 @@ public class WebClient {
 	}
     }
     
+    public static String encodeParam(final Map<String,String> params)
+            throws UnsupportedEncodingException {
+        final List<String> l = new ArrayList<String>(params.size());
+        for (final Map.Entry<String, String> e : params.entrySet()) {
+            final String k = URLEncoder.encode(e.getKey(), "UTF-8");
+            final String v = URLEncoder.encode(e.getValue(), "UTF-8");
+            l.add(k + "=" + v);
+        }
+        return Joiner.on("&").join(l);
+    }
 }
