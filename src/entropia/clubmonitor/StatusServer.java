@@ -11,9 +11,9 @@ import java.io.OutputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
@@ -75,7 +75,8 @@ final class StatusServer implements HttpHandler {
         final Map<String, Object> map = new HashMap<String, Object>();
         map.put("raintropia", -1);
         map.put("generation", RandomUtils.generation());
-        map.put("temp", getTemp());
+        map.put("temp", ADCRegister.Temperature.get());
+        map.put("desired_temp", ADCRegister.DesiredTemperature.get());
         map.put("hardware_fehler",
                 TernaryStatusRegister.HW_FEHLER.status() == RegisterState.HIGH ? true : false);
         map.put("club_offen",
@@ -95,18 +96,16 @@ final class StatusServer implements HttpHandler {
     }
 
     public static String json() {
-        final Map<TernaryStatusRegister, Map<String, Object>> map =
-                new EnumMap<TernaryStatusRegister, Map<String, Object>>(
-                        TernaryStatusRegister.class);
+        final Map<String, Map<String, Object>> map =
+                new TreeMap<String, Map<String, Object>>();
         for (final TernaryStatusRegister r : TernaryStatusRegister.values()) {
             if (r.isPublic()) { 
-                map.put(r, r.jsonStatusMap());
+                map.put(r.toString(), r.jsonStatusMap());
             }
         }
+        for (final ADCRegister r : ADCRegister.values()) {
+            map.put(r.toString(), r.jsonStatusMap());
+        }
         return gson.get().toJson(map) + "\n";
-    }
-    
-    private static double getTemp() {
-        return ADCRegister.Temperature.get();
     }
 }
