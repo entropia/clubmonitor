@@ -18,6 +18,7 @@ public final class ClubMonitor {
     private static Thread netioPoller;
     private static Thread mpdThread;
     private static Thread clubBusTriggerThread;
+    private static Thread fhemTriggerThread;
     private static WebServer webServer;
     
     private static final SyncService SYNC_SERVICE = new SyncService();
@@ -47,6 +48,9 @@ public final class ClubMonitor {
 	}
 	if (Config.isClubBusEnabled()) {
 	    clubBusTriggerThread = ClubBusTrigger.startClubBusTrigger();
+	}
+	if (Config.isFhemEnabled()) {
+	    fhemTriggerThread = FhemTrigger.startFhemTrigger();
 	}
 	webServer = new WebServer(SYNC_SERVICE);
 	webServer.startWebServer();
@@ -88,6 +92,9 @@ public final class ClubMonitor {
 	}
 	if (clubBusTriggerThread != null) {
 	    clubBusTriggerThread.interrupt();
+	}
+	if (fhemTriggerThread != null) {
+	    fhemTriggerThread.interrupt();
 	}
     }
     
