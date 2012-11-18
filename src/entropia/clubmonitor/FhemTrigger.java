@@ -58,12 +58,15 @@ public class FhemTrigger extends TimerTask {
 	}
     }
 
+    private static final String FHEM_OPEN_DESIRED_TEMP = Config.getFhemOpenDesiredTemp();
+    private static final String FHEM_CLOSED_DESIRED_TEMP = Config.getFhemClosedDesiredTemp();
+    
     private void setDesiredTemp() throws IOException {
         final String cmd;
         if (TernaryStatusRegister.CLUB_OFFEN.status() == RegisterState.HIGH) {
-            cmd = getCmdDesiredTemp("22.0");
+            cmd = getCmdDesiredTemp(FHEM_OPEN_DESIRED_TEMP);
         } else if (TernaryStatusRegister.CLUB_OFFEN.status() == RegisterState.LOW) {
-            cmd = getCmdDesiredTemp("18.0");
+            cmd = getCmdDesiredTemp(FHEM_CLOSED_DESIRED_TEMP);
         } else {
             logger.info("CLUB_OFFEN not initialized");
             return;

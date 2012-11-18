@@ -131,7 +131,14 @@ public enum Config {
     @Default("3")
     FHEM_SYNC_MINUTES,
     @MaybeNullIfFalse(FHEM_ENABLE)
-    FHEM_RADIATOR_CENTRAL_NAME
+    FHEM_RADIATOR_CENTRAL_NAME,
+    
+    @MaybeNullIfFalse(FHEM_ENABLE)
+    @RegexTest("\\A[1-3][0-9].{0,5}\\z")
+    FHEM_OPEN_DESIRED_TEMP,
+    @MaybeNullIfFalse(FHEM_ENABLE)
+    @RegexTest("\\A[1-3][0-9].{0,5}\\z")
+    FHEM_CLOSED_DESIRED_TEMP,
     ;
     
     @Retention(RetentionPolicy.RUNTIME)
@@ -178,6 +185,9 @@ public enum Config {
     @Target(ElementType.FIELD)
     private @interface URLTest {
 	/* EMPTY */
+    }
+    private @interface RegexTest {
+        String value();
     }
     
     private static final String NEWLINE = System.getProperty("line.separator");
@@ -313,6 +323,12 @@ public enum Config {
 		}
 		if (f.getAnnotation(URLTest.class) != null) {
 		    urlTest(name, value);
+		}
+		final RegexTest regexTest = f.getAnnotation(RegexTest.class);
+		if (regexTest != null) {
+		    if (!Pattern.matches(regexTest.value(), value)) {
+		        throw new IllegalArgumentException(name + ": " + value);
+		    }
 		}
 	    }
 	}
@@ -541,5 +557,13 @@ public enum Config {
 
     public static String getRadiatorCentralName() {
         return PROPERTIES.getProperty(FHEM_RADIATOR_CENTRAL_NAME.toString());
+    }
+    
+    public static String getFhemOpenDesiredTemp() {
+        return PROPERTIES.getProperty(FHEM_OPEN_DESIRED_TEMP.toString());
+    }
+    
+    public static String getFhemClosedDesiredTemp() {
+        return PROPERTIES.getProperty(FHEM_CLOSED_DESIRED_TEMP.toString());
     }
 }
