@@ -1,5 +1,9 @@
 package entropia.clubmonitor;
 
+import java.util.Collections;
+import java.util.Map;
+import java.util.TreeMap;
+
 public enum ADCRegister {
     Temperature;
     
@@ -16,6 +20,14 @@ public enum ADCRegister {
     public double get() {
 	synchronized (lock) {
 	    return this.value;
+	}
+    }
+    
+    public Map<String, Object> jsonStatusMap() {
+	synchronized (lock) {
+	    final Map<String, Object> map = new TreeMap<String,Object>();
+	    map.put("val", value);
+	    return Collections.unmodifiableMap(map);
 	}
     }
 }
