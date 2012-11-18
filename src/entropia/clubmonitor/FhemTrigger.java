@@ -58,18 +58,18 @@ public class FhemTrigger extends TimerTask {
     }
 
     private void setDesiredTemp() throws IOException {
+        final String cmd;
         if (TernaryStatusRegister.CLUB_OFFEN.status() == RegisterState.HIGH) {
-            final String cmd = getCmdDesiredTemp("22.0");
-            final Map<String, String> map = createCmdMap(cmd);
-            WebClient.post(FHEM_CMD_URL, map);
+            cmd = getCmdDesiredTemp("22.0");
         } else if (TernaryStatusRegister.CLUB_OFFEN.status() == RegisterState.LOW) {
-            final String cmd = getCmdDesiredTemp("18.0");
-            final Map<String, String> map = createCmdMap(cmd);
-            logger.info(cmd);
-            WebClient.post(FHEM_CMD_URL, map);
+            cmd = getCmdDesiredTemp("18.0");
         } else {
             logger.info("CLUB_OFFEN not initialized");
+            return;
         }
+        logger.info(cmd);
+        final Map<String, String> map = createCmdMap(cmd);
+        WebClient.post(FHEM_CMD_URL, map);
     }
 
     private static JsonElement walkJson(JsonObject o, String... path) {
