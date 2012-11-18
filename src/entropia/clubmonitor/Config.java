@@ -119,7 +119,14 @@ public enum Config {
     CLUB_BUS_ENABLE,
     @URLTest
     @MaybeNullIfFalse(CLUB_BUS_ENABLE)
-    CLUB_BUS_URL
+    CLUB_BUS_URL,
+    
+    @BooleanTest
+    @Default("false")
+    FHEM_ENABLE,
+    @URLTest
+    @MaybeNullIfFalse(FHEM_ENABLE)
+    FHEM_URL
     ;
     
     @Retention(RetentionPolicy.RUNTIME)
@@ -498,6 +505,22 @@ public enum Config {
     public static URL getClubBusURL() {
 	try {
 	    final String property = PROPERTIES.getProperty(CLUB_BUS_URL.toString());
+	    if (property == null) {
+		return null;
+	    }
+	    return new URL(property);
+	} catch (MalformedURLException e) {
+	    return null;
+	}
+    }
+
+    public static boolean isFhemEnabled() {
+	return Boolean.parseBoolean(PROPERTIES.getProperty(FHEM_ENABLE.toString()));
+    }
+    
+    public static URL getFhemURL() {
+	try {
+	    final String property = PROPERTIES.getProperty(FHEM_URL.toString());
 	    if (property == null) {
 		return null;
 	    }
