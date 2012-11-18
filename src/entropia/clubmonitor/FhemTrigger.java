@@ -39,7 +39,8 @@ public class FhemTrigger extends TimerTask {
     public void run() {
 	try {
 	    logger.info("FhemTrigger timer expired");
-	    final URL url = new URL(FHEM_CMD_URL, "?cmd=jsonlist FHZ_420e&XHR=1");
+	    final URL url = WebClient.getURL(FHEM_CMD_URL,
+	            "cmd", "jsonlist FHZ_420e", "XHR","1");
 	    final HttpURLConnection c = (HttpURLConnection) url.openConnection();
 	    try {
 		final InputStreamReader in = new InputStreamReader(c.getInputStream());
