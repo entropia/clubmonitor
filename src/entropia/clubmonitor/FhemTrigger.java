@@ -20,14 +20,15 @@ import entropia.clubmonitor.TernaryStatusRegister.RegisterState;
 
 public class FhemTrigger extends TimerTask {
     private static final Logger logger = LoggerFactory.getLogger(FhemTrigger.class);
-    
-    private static final URL FHEM_URL = Config.getFhemCmdURL();
 
+    private static final URL FHEM_CMD_URL = Config.getFhemCmdURL();
+    
     @Override
     public void run() {
 	try {
 	    logger.info("FhemTrigger timer expired");
-	    final HttpURLConnection c = (HttpURLConnection) FHEM_URL.openConnection();
+	    final URL url = new URL(FHEM_CMD_URL, "?cmd=jsonlist FHZ_420e&XHR=1");
+	    final HttpURLConnection c = (HttpURLConnection) url.openConnection();
 	    try {
 		final InputStreamReader in = new InputStreamReader(c.getInputStream());
 		final JsonObject o = new JsonParser().parse(in).getAsJsonObject();
@@ -36,14 +37,14 @@ public class FhemTrigger extends TimerTask {
 		    final Map<String,String> map = new HashMap<String,String>();
 		    map.put("XHR", "1");
 		    map.put("cmd", cmd);
-		    WebClient.post(new URL("http://localhost:8083/fhem"), map);
+		    WebClient.post(FHEM_CMD_URL, map);
 		} else if (TernaryStatusRegister.CLUB_OFFEN.status() == RegisterState.LOW) {
 		    final String cmd = "set FHT_402e desired-temp 18.0";
 		    final Map<String,String> map = new HashMap<String,String>();
 		    map.put("XHR", "1");
 		    map.put("cmd", cmd);
 		    logger.info(cmd);
-		    WebClient.post(new URL("http://localhost:8083/fhem"), map);
+		    WebClient.post(FHEM_CMD_URL, map);
 		} else {
 		    logger.info("CLUB_OFFEN not initialized");
 		}
