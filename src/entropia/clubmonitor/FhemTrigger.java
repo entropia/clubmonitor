@@ -56,30 +56,34 @@ public class FhemTrigger extends TimerTask {
 	    logger.warn("FhemTrigger timer", e);
 	}
     }
-
-    private static JsonObject xxx(final JsonElement e, final String key) {
-	return e.getAsJsonObject().get(key).getAsJsonObject();
+    
+    private static JsonElement walkJson(JsonObject o, String... path) {
+        JsonElement _o = o;
+        for (final String k : path) {
+            _o = _o.getAsJsonObject().get(k);
+        }
+        return _o;
     }
     
     private static void updateMeasuredTemp(JsonObject o) {
 	try {
-	    final JsonObject x = xxx(xxx(xxx(xxx(o, "ResultSet"), "Results"),
-		    "READINGS"), "measured-temp");
+	    final JsonObject x = walkJson(o, "ResultSet", "Results", "READINGS",
+	            "measured-temp").getAsJsonObject();
 	    final double temp = x.get("VAL").getAsDouble();
 	    ADCRegister.Temperature.set(temp);
-	} catch (NullPointerException e) {
-	    /* EMPTY: we don't care for now */
+	} catch (Exception e) {
+	    logger.warn("updateMeausredTemp", e);
 	}
     }
 
     private static void updateDesiredTemp(JsonObject o) {
 	try {
-	    final JsonObject x = xxx(xxx(xxx(xxx(o, "ResultSet"), "Results"),
-		    "READINGS"), "desired-temp");
+	    final JsonObject x = walkJson(o, "ResultSet", "Results",
+		    "READINGS", "desired-temp").getAsJsonObject();
 	    final double temp = x.get("VAL").getAsDouble();
 	    ADCRegister.DesiredTemperature.set(temp);
-	} catch (NullPointerException e) {
-	    /* EMPTY: we don't care for now */
+	} catch (Exception e) {
+	    logger.warn("updateDesiredTemp", e);
 	}
     }
     
