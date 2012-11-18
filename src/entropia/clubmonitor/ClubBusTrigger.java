@@ -8,8 +8,6 @@ import java.util.concurrent.LinkedBlockingDeque;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.base.Charsets;
-
 import entropia.clubmonitor.TernaryStatusRegister.RegisterState;
 
 public class ClubBusTrigger extends PublicOnlyTrigger implements Runnable {
@@ -37,25 +35,6 @@ public class ClubBusTrigger extends PublicOnlyTrigger implements Runnable {
 	}
     }
 
-    private static void post(final HttpURLConnection con,
-	    final String param) throws IOException {
-	final byte[] paramRaw = param.getBytes(Charsets.UTF_8);
-	con.setDoOutput(true);
-	con.setDoInput(true);
-	con.setInstanceFollowRedirects(false);
-	con.setRequestMethod("POST");
-	con.setUseCaches(false);
-	con.getOutputStream().write(paramRaw);
-	final int responseCode = con.getResponseCode();
-	if (responseCode != 200) {
-	    final String responseMessage = con.getResponseMessage();
-	    if (responseMessage != null) {
-		throw new IOException(responseMessage);
-	    } else {
-		throw new IOException("response code: " + responseCode);
-	    }
-	}
-    }
     
     private static final URL CLUB_BUS_TRIGGER_URL = Config.getClubBusURL();	    
     
@@ -65,11 +44,11 @@ public class ClubBusTrigger extends PublicOnlyTrigger implements Runnable {
 	try {
 	    switch (poll) {
 	    case POWER_DOWN:
-		post(con, "0");
+		WebClient.post(con, "0");
 		logger.info("request power down");
 		break;
 	    case POWER_UP:
-		post(con, "1");
+		WebClient.post(con, "1");
 		logger.info("request power up");
 		break;
 	    default:
