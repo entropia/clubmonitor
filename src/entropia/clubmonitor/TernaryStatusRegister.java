@@ -1,8 +1,8 @@
 package entropia.clubmonitor;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
 
 public enum TernaryStatusRegister {
@@ -51,7 +51,7 @@ public enum TernaryStatusRegister {
 
     public Map<String,Object> jsonStatusMap() {
 	synchronized (lock) {
-	    final Map<String,Object> status = new HashMap<String,Object>();
+	    final Map<String,Object> status = new TreeMap<String,Object>();
 	    final boolean boolStatus = (status() == RegisterState.HIGH)
 		    ? true : false; 
 	    status.put("lastChange", lastChangeTimestampSeconds);
