@@ -1,5 +1,6 @@
 package entropia.clubmonitor;
 
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -45,18 +46,7 @@ public class FhemTrigger extends TimerTask {
 	    try {
 		final InputStreamReader in = new InputStreamReader(c.getInputStream());
 		final JsonObject o = new JsonParser().parse(in).getAsJsonObject();
-		if (TernaryStatusRegister.CLUB_OFFEN.status() == RegisterState.HIGH) {
-		    final String cmd = getCmdDesiredTemp("22.0");
-		    final Map<String, String> map = createCmdMap(cmd);
-		    WebClient.post(FHEM_CMD_URL, map);
-		} else if (TernaryStatusRegister.CLUB_OFFEN.status() == RegisterState.LOW) {
-		    final String cmd = getCmdDesiredTemp("18.0");
-		    final Map<String, String> map = createCmdMap(cmd);
-		    logger.info(cmd);
-		    WebClient.post(FHEM_CMD_URL, map);
-		} else {
-		    logger.info("CLUB_OFFEN not initialized");
-		}
+		setDesiredTemp();
 		updateMeasuredTemp(o);
 		updateDesiredTemp(o);
 	    } finally {
@@ -66,7 +56,22 @@ public class FhemTrigger extends TimerTask {
 	    logger.warn("FhemTrigger timer", e);
 	}
     }
-    
+
+    private void setDesiredTemp() throws IOException {
+        if (TernaryStatusRegister.CLUB_OFFEN.status() == RegisterState.HIGH) {
+            final String cmd = getCmdDesiredTemp("22.0");
+            final Map<String, String> map = createCmdMap(cmd);
+            WebClient.post(FHEM_CMD_URL, map);
+        } else if (TernaryStatusRegister.CLUB_OFFEN.status() == RegisterState.LOW) {
+            final String cmd = getCmdDesiredTemp("18.0");
+            final Map<String, String> map = createCmdMap(cmd);
+            logger.info(cmd);
+            WebClient.post(FHEM_CMD_URL, map);
+        } else {
+            logger.info("CLUB_OFFEN not initialized");
+        }
+    }
+
     private static JsonElement walkJson(JsonObject o, String... path) {
         JsonElement _o = o;
         for (final String k : path) {
