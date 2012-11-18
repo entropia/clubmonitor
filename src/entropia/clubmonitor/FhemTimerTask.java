@@ -21,7 +21,7 @@ import com.google.gson.JsonParser;
 
 import entropia.clubmonitor.TernaryStatusRegister.RegisterState;
 
-public class FhemTimerTask extends TimerTask {
+public final class FhemTimerTask extends TimerTask {
     private static final Logger logger = LoggerFactory.getLogger(FhemTimerTask.class);
 
     private static final String RADIATOR_CENTRAL_NAME = Config.getRadiatorCentralName();
@@ -117,7 +117,7 @@ public class FhemTimerTask extends TimerTask {
 	}
     }
     
-    public static class Trigger extends PublicOnlyTrigger {
+    static class Trigger extends PublicOnlyTrigger {
 
         @Override
         public void trigger(TernaryStatusRegister register) throws IOException {
