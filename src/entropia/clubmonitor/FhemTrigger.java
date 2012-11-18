@@ -45,14 +45,15 @@ public class FhemTrigger extends TimerTask {
 	    final URL url = WebClient.getURL(FHEM_CMD_URL,
 	            "cmd", "jsonlist FHZ_420e", "XHR","1");
 	    final HttpURLConnection c = (HttpURLConnection) url.openConnection();
+	    final JsonObject o;
 	    try {
 		final InputStreamReader in = new InputStreamReader(c.getInputStream());
-		final JsonObject o = new JsonParser().parse(in).getAsJsonObject();
-		updateMeasuredTemp(o);
-		updateDesiredTemp(o);
+		o = new JsonParser().parse(in).getAsJsonObject();
 	    } finally {
 		c.disconnect();
 	    }
+	    updateMeasuredTemp(o);
+	    updateDesiredTemp(o);
 	} catch (Throwable e) {
 	    logger.warn("FhemTrigger timer", e);
 	}
