@@ -1,6 +1,7 @@
 package entropia.clubmonitor;
 
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -16,6 +17,8 @@ import java.util.Map;
 
 import com.google.common.base.Charsets;
 import com.google.common.base.Joiner;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 public class WebClient {
 
@@ -99,5 +102,15 @@ public class WebClient {
             throws UnsupportedEncodingException, MalformedURLException {
         final String p = buildParams(params);
         return new URL(url, "?" + p);
+    }
+    
+    public static JsonObject getJsonElement(final URL url) throws IOException {
+        final HttpURLConnection c = (HttpURLConnection) url.openConnection();
+        try {
+            final InputStreamReader in = new InputStreamReader(c.getInputStream());
+            return new JsonParser().parse(in).getAsJsonObject();
+        } finally {
+            c.disconnect();
+        }
     }
 }

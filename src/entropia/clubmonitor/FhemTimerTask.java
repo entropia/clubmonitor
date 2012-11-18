@@ -74,22 +74,12 @@ public final class FhemTimerTask extends TimerTask {
 	    final String cmd = "jsonlist " + RADIATOR_CENTRAL_NAME;
 	    final URL url = WebClient.getURL(FHEM_CMD_URL,
 	            "cmd", cmd, "XHR","1");
-	    final JsonObject o = getJsonElement(url);
+	    final JsonObject o = WebClient.getJsonElement(url);
 	    updateMeasuredTemp(o);
 	    updateDesiredTemp(o);
 	} catch (Throwable e) {
 	    logger.warn("FhemTrigger timer", e);
 	}
-    }
-
-    private JsonObject getJsonElement(final URL url) throws IOException {
-        final HttpURLConnection c = (HttpURLConnection) url.openConnection();
-        try {
-            final InputStreamReader in = new InputStreamReader(c.getInputStream());
-            return new JsonParser().parse(in).getAsJsonObject();
-        } finally {
-            c.disconnect();
-        }
     }
 
     private static final String FHEM_OPEN_DESIRED_TEMP = Config.getFhemOpenDesiredTemp();
