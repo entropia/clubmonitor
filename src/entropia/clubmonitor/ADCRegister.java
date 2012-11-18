@@ -5,7 +5,8 @@ import java.util.Map;
 import java.util.TreeMap;
 
 public enum ADCRegister {
-    Temperature;
+    Temperature,
+    DesiredTemperature;
     
     private double value;
     
