@@ -6,6 +6,10 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -57,6 +61,26 @@ public class WebClient {
 	} finally {
 	    con.disconnect();
 	}
+    }
+    
+    private static String urlencode(final String s)
+            throws UnsupportedEncodingException {
+        return URLEncoder.encode(s, Charsets.UTF_8.name());
+    }
+    
+    public static String buildParams(final String... args) throws UnsupportedEncodingException {
+        final Map<String,String> map = new HashMap<String,String>(args.length / 2);
+        final List<String> l = Arrays.asList(args);
+        final Iterator<String> it = l.iterator();
+        while (it.hasNext()) {
+            final String key = urlencode(it.next());
+            if (!it.hasNext()) {
+                throw new IllegalArgumentException("length of args % 2 != 0");
+            }
+            final String value = urlencode(it.next());
+            map.put(key, value);
+        }
+        return encodeParam(Collections.unmodifiableMap(map));
     }
     
     public static String encodeParam(final Map<String,String> params)
