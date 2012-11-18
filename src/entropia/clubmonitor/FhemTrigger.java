@@ -28,6 +28,7 @@ public class FhemTrigger extends TimerTask {
 		final InputStreamReader in = new InputStreamReader(c.getInputStream());
 		final JsonObject o = new JsonParser().parse(in).getAsJsonObject();
 		updateMeasuredTemp(o);
+		updateDesiredTemp(o);
 	    } finally {
 		c.disconnect();
 	    }
@@ -51,6 +52,17 @@ public class FhemTrigger extends TimerTask {
 	}
     }
 
+    private static void updateDesiredTemp(JsonObject o) {
+	try {
+	    final JsonObject x = xxx(xxx(xxx(xxx(o, "ResultSet"), "Results"),
+		    "READINGS"), "desired-temp");
+	    final double temp = x.get("VAL").getAsDouble();
+	    ADCRegister.DesiredTemperature.set(temp);
+	} catch (NullPointerException e) {
+	    /* EMPTY: we don't care for now */
+	}
+    }
+    
     private static final long DELAY = 0;
     private static final long RATE = TimeUnit.MINUTES.toMillis(3) * 3;
     
