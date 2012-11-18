@@ -3,6 +3,7 @@ package entropia.clubmonitor;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
@@ -23,6 +24,17 @@ public class FhemTrigger extends TimerTask {
 
     private static final URL FHEM_CMD_URL = Config.getFhemCmdURL();
     
+    private static String getCmdDesiredTemp(final String temp) {
+        return String.format("set FHT_402e desired-temp %s", temp);
+    }
+    
+    private static Map<String,String> createCmdMap(final String cmd) {
+        final Map<String,String> map = new HashMap<String,String>();
+        map.put("XHR", "1");
+        map.put("cmd", cmd);
+        return Collections.unmodifiableMap(map);
+    }
+    
     @Override
     public void run() {
 	try {
@@ -33,16 +45,12 @@ public class FhemTrigger extends TimerTask {
 		final InputStreamReader in = new InputStreamReader(c.getInputStream());
 		final JsonObject o = new JsonParser().parse(in).getAsJsonObject();
 		if (TernaryStatusRegister.CLUB_OFFEN.status() == RegisterState.HIGH) {
-		    final String cmd = "set FHT_402e desired-temp 22.0";
-		    final Map<String,String> map = new HashMap<String,String>();
-		    map.put("XHR", "1");
-		    map.put("cmd", cmd);
+		    final String cmd = getCmdDesiredTemp("22.0");
+		    final Map<String, String> map = createCmdMap(cmd);
 		    WebClient.post(FHEM_CMD_URL, map);
 		} else if (TernaryStatusRegister.CLUB_OFFEN.status() == RegisterState.LOW) {
-		    final String cmd = "set FHT_402e desired-temp 18.0";
-		    final Map<String,String> map = new HashMap<String,String>();
-		    map.put("XHR", "1");
-		    map.put("cmd", cmd);
+		    final String cmd = getCmdDesiredTemp("18.0");
+		    final Map<String, String> map = createCmdMap(cmd);
 		    logger.info(cmd);
 		    WebClient.post(FHEM_CMD_URL, map);
 		} else {
