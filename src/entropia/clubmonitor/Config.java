@@ -127,10 +127,11 @@ public enum Config {
     @URLTest
     @MaybeNullIfFalse(FHEM_ENABLE)
     FHEM_CMD_URL,
-    
     @IntegerTest
     @Default("3")
-    FHEM_SYNC_MINUTES
+    FHEM_SYNC_MINUTES,
+    @MaybeNullIfFalse(FHEM_ENABLE)
+    FHEM_RADIATOR_CENTRAL_NAME
     ;
     
     @Retention(RetentionPolicy.RUNTIME)
@@ -536,5 +537,9 @@ public enum Config {
     
     public static int getFhemSyncMinutes() {
         return Integer.parseInt(PROPERTIES.getProperty(FHEM_SYNC_MINUTES.toString()));
+    }
+
+    public static String getRadiatorCentralName() {
+        return PROPERTIES.getProperty(FHEM_RADIATOR_CENTRAL_NAME.toString());
     }
 }

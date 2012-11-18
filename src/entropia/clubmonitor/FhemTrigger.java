@@ -23,10 +23,11 @@ import entropia.clubmonitor.TernaryStatusRegister.RegisterState;
 public class FhemTrigger extends TimerTask {
     private static final Logger logger = LoggerFactory.getLogger(FhemTrigger.class);
 
+    private static final String RADIATOR_CENTRAL_NAME = Config.getRadiatorCentralName();
     private static final URL FHEM_CMD_URL = Config.getFhemCmdURL();
     
     private static String getCmdDesiredTemp(final String temp) {
-        return String.format("set FHT_402e desired-temp %s", temp);
+        return String.format("set %s desired-temp %s", RADIATOR_CENTRAL_NAME, temp);
     }
     
     private static Map<String,String> createCmdMap(final String cmd) {
