@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,11 +21,13 @@ import com.google.gson.JsonParser;
 
 import entropia.clubmonitor.TernaryStatusRegister.RegisterState;
 
-public class FhemTrigger extends TimerTask {
-    private static final Logger logger = LoggerFactory.getLogger(FhemTrigger.class);
+public class FhemTimerTask extends TimerTask {
+    private static final Logger logger = LoggerFactory.getLogger(FhemTimerTask.class);
 
     private static final String RADIATOR_CENTRAL_NAME = Config.getRadiatorCentralName();
     private static final URL FHEM_CMD_URL = Config.getFhemCmdURL();
+    
+    private static final AtomicBoolean doUpdate = new AtomicBoolean(true);
     
     private static String getCmdDesiredTemp(final String temp) {
         return String.format("set %s desired-temp %s", RADIATOR_CENTRAL_NAME, temp);
@@ -64,6 +67,9 @@ public class FhemTrigger extends TimerTask {
 
     private void setDesiredTemp() throws IOException {
         try {
+            if (!doUpdate.get()) {
+                return;
+            }
             final String cmd;
             if (TernaryStatusRegister.CLUB_OFFEN.status() == RegisterState.HIGH) {
                 cmd = getCmdDesiredTemp(FHEM_OPEN_DESIRED_TEMP);
@@ -76,6 +82,7 @@ public class FhemTrigger extends TimerTask {
             logger.info(cmd);
             final Map<String, String> map = createCmdMap(cmd);
             WebClient.post(FHEM_CMD_URL, map);
+            doUpdate.set(false);
         } catch (Exception e) {
             logger.warn("setDesiredTemp", e);
         }
@@ -109,12 +116,23 @@ public class FhemTrigger extends TimerTask {
 	}
     }
     
+    public static class Trigger extends PublicOnlyTrigger {
+
+        @Override
+        public void trigger(TernaryStatusRegister register) throws IOException {
+            if (TernaryStatusRegister.CLUB_OFFEN == register) {
+                doUpdate.set(true);
+            }
+        }
+        
+    }
+    
     private static final long DELAY = 0;
     private static final long RATE = TimeUnit.MINUTES.toMillis(Config.getFhemSyncMinutes());
     
     public static Thread startFhemTrigger() {
 	final Timer timer = new Timer();
-	timer.scheduleAtFixedRate(new FhemTrigger(), DELAY, RATE);
+	timer.scheduleAtFixedRate(new FhemTimerTask(), DELAY, RATE);
 	logger.info("FhemTriggerThread started");
 	return null;
     }

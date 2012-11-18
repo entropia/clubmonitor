@@ -50,7 +50,7 @@ public final class ClubMonitor {
 	    clubBusTriggerThread = ClubBusTrigger.startClubBusTrigger();
 	}
 	if (Config.isFhemEnabled()) {
-	    fhemTriggerThread = FhemTrigger.startFhemTrigger();
+	    fhemTriggerThread = FhemTimerTask.startFhemTrigger();
 	}
 	webServer = new WebServer(SYNC_SERVICE);
 	webServer.startWebServer();
