@@ -4,8 +4,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -38,6 +40,21 @@ public final class FhemTimerTask extends TimerTask {
         map.put("XHR", "1");
         map.put("cmd", cmd);
         return Collections.unmodifiableMap(map);
+    }
+    
+    private static final List<String> RESET_CMDS = Arrays.asList();
+    
+    private static void resetRadiatorCentral() {
+        for (final String cmd : RESET_CMDS) {
+            try {
+                final Map<String, String> resetcmd = createCmdMap(String.format(
+                        cmd, RADIATOR_CENTRAL_NAME));
+                WebClient.post(FHEM_CMD_URL, resetcmd);
+            } catch (Exception e) {
+                logger.warn("error while resetting radiator central attribute: "
+                        + cmd, e);
+            }
+        }
     }
     
     @Override
@@ -138,6 +155,7 @@ public final class FhemTimerTask extends TimerTask {
 	final Timer timer = new Timer();
 	timer.scheduleAtFixedRate(new FhemTimerTask(), DELAY, RATE);
 	logger.info("FhemTriggerThread started");
+	resetRadiatorCentral();
 	return timer;
     }
 }
