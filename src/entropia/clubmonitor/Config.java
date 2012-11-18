@@ -126,7 +126,7 @@ public enum Config {
     FHEM_ENABLE,
     @URLTest
     @MaybeNullIfFalse(FHEM_ENABLE)
-    FHEM_URL,
+    FHEM_CMD_URL,
     
     @IntegerTest
     @Default("3")
@@ -522,9 +522,9 @@ public enum Config {
 	return Boolean.parseBoolean(PROPERTIES.getProperty(FHEM_ENABLE.toString()));
     }
     
-    public static URL getFhemURL() {
+    public static URL getFhemCmdURL() {
 	try {
-	    final String property = PROPERTIES.getProperty(FHEM_URL.toString());
+	    final String property = PROPERTIES.getProperty(FHEM_CMD_URL.toString());
 	    if (property == null) {
 		return null;
 	    }

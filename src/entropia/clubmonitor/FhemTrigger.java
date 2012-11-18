@@ -21,7 +21,7 @@ import entropia.clubmonitor.TernaryStatusRegister.RegisterState;
 public class FhemTrigger extends TimerTask {
     private static final Logger logger = LoggerFactory.getLogger(FhemTrigger.class);
     
-    private static final URL FHEM_URL = Config.getFhemURL();
+    private static final URL FHEM_URL = Config.getFhemCmdURL();
 
     @Override
     public void run() {
