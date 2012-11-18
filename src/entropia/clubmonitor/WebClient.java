@@ -2,6 +2,7 @@ package entropia.clubmonitor;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,4 +43,25 @@ public class WebClient {
 	final String param = Joiner.on("&").join(l);	
 	post(con, param);
     }
+    
+    public static void post(final URL url, final Map<String,String> params)
+	    throws IOException {
+	final HttpURLConnection con = (HttpURLConnection) url.openConnection();
+	try {
+	    post(con, params);
+	} finally {
+	    con.disconnect();
+	}
+    }
+    
+    public static void post(final URL url, final String param)
+	    throws IOException {
+	final HttpURLConnection con = (HttpURLConnection) url.openConnection();
+	try {
+	    post(con, param);
+	} finally {
+	    con.disconnect();
+	}
+    }
+    
 }
