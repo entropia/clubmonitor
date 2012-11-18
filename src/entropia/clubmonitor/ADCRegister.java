@@ -3,17 +3,17 @@ package entropia.clubmonitor;
 public enum ADCRegister {
     Temperature;
     
-    private long value;
+    private double value;
     
     private static final Object lock = new Object();
     
-    public void set(long value) {
+    public void set(double value) {
 	synchronized (lock) {
 	    this.value = value;
 	}
     }
     
-    public long get() {
+    public double get() {
 	synchronized (lock) {
 	    return this.value;
 	}

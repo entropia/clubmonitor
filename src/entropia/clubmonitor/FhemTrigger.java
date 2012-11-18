@@ -45,9 +45,7 @@ public class FhemTrigger extends TimerTask {
 	    final JsonObject x = xxx(xxx(xxx(xxx(o, "ResultSet"), "Results"),
 		    "READINGS"), "measured-temp");
 	    final double temp = x.get("VAL").getAsDouble();
-	    final long temp_ = (long) (temp * 10);
-	    System.out.println(temp_);
-	    ADCRegister.Temperature.set(temp_);
+	    ADCRegister.Temperature.set(temp);
 	} catch (NullPointerException e) {
 	    /* EMPTY: we don't care for now */
 	}
