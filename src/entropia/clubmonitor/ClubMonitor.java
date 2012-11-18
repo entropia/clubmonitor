@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.Locale;
+import java.util.Timer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +19,7 @@ public final class ClubMonitor {
     private static Thread netioPoller;
     private static Thread mpdThread;
     private static Thread clubBusTriggerThread;
-    private static Thread fhemTriggerThread;
+    private static Timer fhemTriggerTimer;
     private static WebServer webServer;
     
     private static final SyncService SYNC_SERVICE = new SyncService();
@@ -50,7 +51,7 @@ public final class ClubMonitor {
 	    clubBusTriggerThread = ClubBusTrigger.startClubBusTrigger();
 	}
 	if (Config.isFhemEnabled()) {
-	    fhemTriggerThread = FhemTimerTask.startFhemTrigger();
+	    fhemTriggerTimer = FhemTimerTask.startFhemTrigger();
 	}
 	webServer = new WebServer(SYNC_SERVICE);
 	webServer.startWebServer();
@@ -93,8 +94,8 @@ public final class ClubMonitor {
 	if (clubBusTriggerThread != null) {
 	    clubBusTriggerThread.interrupt();
 	}
-	if (fhemTriggerThread != null) {
-	    fhemTriggerThread.interrupt();
+	if (fhemTriggerTimer != null) {
+	    fhemTriggerTimer.cancel();
 	}
     }
     

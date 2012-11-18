@@ -131,10 +131,10 @@ public class FhemTimerTask extends TimerTask {
     private static final long DELAY = 0;
     private static final long RATE = TimeUnit.MINUTES.toMillis(Config.getFhemSyncMinutes());
     
-    public static Thread startFhemTrigger() {
+    public static Timer startFhemTrigger() {
 	final Timer timer = new Timer();
 	timer.scheduleAtFixedRate(new FhemTimerTask(), DELAY, RATE);
 	logger.info("FhemTriggerThread started");
-	return null;
+	return timer;
     }
 }
