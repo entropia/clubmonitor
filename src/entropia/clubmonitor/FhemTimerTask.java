@@ -57,6 +57,14 @@ public final class FhemTimerTask extends TimerTask {
         }
     }
     
+    private static void syncTime() {
+        try {
+            // TODO: implement
+        } catch (Exception e) {
+            logger.warn("error on syncing time to radiator central", e);
+        }
+    }
+    
     @Override
     public void run() {
 	try {
