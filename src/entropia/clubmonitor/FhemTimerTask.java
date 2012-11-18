@@ -42,6 +42,7 @@ public final class FhemTimerTask extends TimerTask {
         return Collections.unmodifiableMap(map);
     }
     
+    // TODO: fill in reset cmds - beware %s for NAME
     private static final List<String> RESET_CMDS = Arrays.asList();
     
     private static void resetRadiatorCentral() {
