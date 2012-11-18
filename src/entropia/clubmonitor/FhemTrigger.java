@@ -32,14 +32,17 @@ public class FhemTrigger extends TimerTask {
 		final InputStreamReader in = new InputStreamReader(c.getInputStream());
 		final JsonObject o = new JsonParser().parse(in).getAsJsonObject();
 		if (TernaryStatusRegister.CLUB_OFFEN.status() == RegisterState.HIGH) {
+		    final String cmd = "set FHT_402e desired-temp 22.0";
 		    final Map<String,String> map = new HashMap<String,String>();
 		    map.put("XHR", "1");
-		    map.put("cmd", "set FHT_402e desired-temp 22.0");
+		    map.put("cmd", cmd);
 		    WebClient.post(new URL("http://localhost:8083/fhem"), map);
 		} else if (TernaryStatusRegister.CLUB_OFFEN.status() == RegisterState.LOW) {
+		    final String cmd = "set FHT_402e desired-temp 18.0";
 		    final Map<String,String> map = new HashMap<String,String>();
 		    map.put("XHR", "1");
-		    map.put("cmd", "set FHT_402e desired-temp 18.0");
+		    map.put("cmd", cmd);
+		    logger.info(cmd);
 		    WebClient.post(new URL("http://localhost:8083/fhem"), map);
 		} else {
 		    logger.info("CLUB_OFFEN not initialized");
