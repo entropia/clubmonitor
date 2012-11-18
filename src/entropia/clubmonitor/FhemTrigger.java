@@ -61,20 +61,24 @@ public class FhemTrigger extends TimerTask {
 
     private static final String FHEM_OPEN_DESIRED_TEMP = Config.getFhemOpenDesiredTemp();
     private static final String FHEM_CLOSED_DESIRED_TEMP = Config.getFhemClosedDesiredTemp();
-    
+
     private void setDesiredTemp() throws IOException {
-        final String cmd;
-        if (TernaryStatusRegister.CLUB_OFFEN.status() == RegisterState.HIGH) {
-            cmd = getCmdDesiredTemp(FHEM_OPEN_DESIRED_TEMP);
-        } else if (TernaryStatusRegister.CLUB_OFFEN.status() == RegisterState.LOW) {
-            cmd = getCmdDesiredTemp(FHEM_CLOSED_DESIRED_TEMP);
-        } else {
-            logger.info("CLUB_OFFEN not initialized");
-            return;
+        try {
+            final String cmd;
+            if (TernaryStatusRegister.CLUB_OFFEN.status() == RegisterState.HIGH) {
+                cmd = getCmdDesiredTemp(FHEM_OPEN_DESIRED_TEMP);
+            } else if (TernaryStatusRegister.CLUB_OFFEN.status() == RegisterState.LOW) {
+                cmd = getCmdDesiredTemp(FHEM_CLOSED_DESIRED_TEMP);
+            } else {
+                logger.info("CLUB_OFFEN not initialized");
+                return;
+            }
+            logger.info(cmd);
+            final Map<String, String> map = createCmdMap(cmd);
+            WebClient.post(FHEM_CMD_URL, map);
+        } catch (Exception e) {
+            logger.warn("setDesiredTemp", e);
         }
-        logger.info(cmd);
-        final Map<String, String> map = createCmdMap(cmd);
-        WebClient.post(FHEM_CMD_URL, map);
     }
 
     private static JsonElement walkJson(JsonObject o, String... path) {
