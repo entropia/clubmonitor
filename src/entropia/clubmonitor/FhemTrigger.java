@@ -95,7 +95,7 @@ public class FhemTrigger extends TimerTask {
 	            "measured-temp", "VAL").getAsDouble();
 	    ADCRegister.Temperature.set(temp);
 	} catch (Exception e) {
-	    logger.warn("updateMeausredTemp", e);
+	    logger.warn("updateMeasuredTemp", e);
 	}
     }
 
