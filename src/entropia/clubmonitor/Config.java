@@ -126,7 +126,11 @@ public enum Config {
     FHEM_ENABLE,
     @URLTest
     @MaybeNullIfFalse(FHEM_ENABLE)
-    FHEM_URL
+    FHEM_URL,
+    
+    @IntegerTest
+    @Default("3")
+    FHEM_SYNC_MINUTES
     ;
     
     @Retention(RetentionPolicy.RUNTIME)
@@ -528,5 +532,9 @@ public enum Config {
 	} catch (MalformedURLException e) {
 	    return null;
 	}
+    }
+    
+    public static int getFhemSyncMinutes() {
+        return Integer.parseInt(PROPERTIES.getProperty(FHEM_SYNC_MINUTES.toString()));
     }
 }

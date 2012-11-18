@@ -84,7 +84,7 @@ public class FhemTrigger extends TimerTask {
     }
     
     private static final long DELAY = 0;
-    private static final long RATE = TimeUnit.MINUTES.toMillis(1);
+    private static final long RATE = TimeUnit.MINUTES.toMillis(Config.getFhemSyncMinutes());
     
     public static Thread startFhemTrigger() {
 	final Timer timer = new Timer();
