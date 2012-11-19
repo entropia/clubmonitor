@@ -101,9 +101,6 @@ final class HauptRaumNetIOHandler implements Runnable {
 		Thread.currentThread().interrupt();
 	    } catch (final Exception e) {
 		logger.warn("restarting because of exception", e);
-	    } catch (final Error e) {
-		logger.error("error in " + name, e);
-		return;
 	    }
 	}
     }
