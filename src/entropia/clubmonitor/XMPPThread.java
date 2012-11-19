@@ -120,9 +120,6 @@ enum XMPPThread implements Runnable {
 		Thread.currentThread().interrupt();
 	    } catch (final Exception e) {
 		logger.warn("exception in " + threadName, e);
-	    } catch (final Error e) {
-		logger.error("error in " + threadName, e);
-		return;
 	    }
 	}
     }

@@ -1,8 +1,6 @@
 package entropia.clubmonitor;
 
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Collections;
@@ -19,7 +17,6 @@ import org.slf4j.LoggerFactory;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 import entropia.clubmonitor.TernaryStatusRegister.RegisterState;
 

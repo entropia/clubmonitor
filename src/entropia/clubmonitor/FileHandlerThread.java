@@ -144,9 +144,6 @@ enum FileHandlerThread implements Runnable {
 		Thread.currentThread().interrupt();
 	    } catch (Exception e) {
 		logger.warn("exception acting on file in " + name, e);
-	    } catch (Error e) {
-		logger.error("error in " + name, e);
-		return;
 	    }
 	}
     }

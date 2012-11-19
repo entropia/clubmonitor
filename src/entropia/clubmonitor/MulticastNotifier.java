@@ -75,9 +75,6 @@ final class MulticastNotifier extends PublicOnlyTrigger implements Runnable {
 	    timedTrigger();
 	} catch (final Exception e) {
 	    logger.warn("trigger caused exception", e);
-	} catch (final Error e) {
-	    logger.error("trigger caused error", e);
-	    return;
 	}
     }
 }

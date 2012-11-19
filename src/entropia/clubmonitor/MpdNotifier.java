@@ -121,9 +121,6 @@ final class MpdNotifier extends PublicOnlyTrigger implements Runnable {
                 logger.error("exception in " + name, e);
             } catch (final InterruptedException e) {
                 Thread.currentThread().interrupt();
-            } catch (final Error e) {
-        	logger.error("error in " + name, e);
-        	return;
             }
         }
     }
