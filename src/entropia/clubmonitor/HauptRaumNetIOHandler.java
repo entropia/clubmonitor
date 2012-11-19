@@ -93,7 +93,6 @@ final class HauptRaumNetIOHandler implements Runnable {
 
     @Override
     public void run() {
-	final String name = Thread.currentThread().getName();
 	while (!Thread.interrupted()) {
 	    try {
 		poll();
