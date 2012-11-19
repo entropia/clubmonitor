@@ -82,7 +82,7 @@ public final class FhemTimerTask extends TimerTask {
     private static final String FHEM_OPEN_DESIRED_TEMP = Config.getFhemOpenDesiredTemp();
     private static final String FHEM_CLOSED_DESIRED_TEMP = Config.getFhemClosedDesiredTemp();
 
-    private void setDesiredTemp() throws IOException {
+    private static void setDesiredTemp() {
         try {
             if (!doUpdate.get()) {
                 return;

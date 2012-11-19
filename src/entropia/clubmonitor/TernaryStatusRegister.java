@@ -70,6 +70,8 @@ public enum TernaryStatusRegister {
 		return;
 	    case LOW:
 		return;
+	    default:
+	        throw new IllegalStateException();
 	    }
 	}
     }
@@ -82,7 +84,9 @@ public enum TernaryStatusRegister {
 		trigger(this);
 		return;
 	    case HIGH:
-		return;
+	        return;
+	    default:
+	        throw new IllegalStateException();
 	    }
 	}
     }

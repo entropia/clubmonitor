@@ -5,7 +5,7 @@ import java.util.concurrent.TimeUnit;
 
 
 public class SyncService {
-    private static enum SyncElement { SELEM; };
+    private static enum SyncElement { SELEM; }
     private final ArrayBlockingQueue<SyncElement> blockQ =
             new ArrayBlockingQueue<SyncElement>(1, false);
     

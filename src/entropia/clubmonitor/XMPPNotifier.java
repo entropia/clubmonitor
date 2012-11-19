@@ -126,11 +126,13 @@ final class XMPPNotifier extends PublicOnlyTrigger {
 		recover(changed);
 	    }
 	    return;
+	default:
+	    throw new IllegalStateException();
+
 	}
-	throw new IllegalStateException();
     }
 
-    private void recover(final TernaryStatusRegister changed) {
+    private static void recover(@SuppressWarnings("unused") final TernaryStatusRegister changed) {
 	if (HW_FEHLER.status() == HIGH) {
 	    send(StatusChange.FEHLER_ON);
 	    return;
@@ -154,7 +156,7 @@ final class XMPPNotifier extends PublicOnlyTrigger {
 	throw new IllegalStateException("illegal state");
     }
 
-    private void send(StatusChange status) {
+    private static void send(StatusChange status) {
 	XMPPThread.INSTANCE.status.addLast(status);
     }
 }

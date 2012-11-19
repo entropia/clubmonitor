@@ -148,7 +148,7 @@ enum XMPPThread implements Runnable {
 	}
     }
 
-    private MultiUserChat joinMuc(Connection connection) {
+    private static MultiUserChat joinMuc(Connection connection) {
 	if (Config.isXMPPMUCEnabled()) {
 	    try {
 		final String xmppmuc = Config.getXMPPMUC();
@@ -284,10 +284,9 @@ enum XMPPThread implements Runnable {
 	final int idxSlash = from.indexOf('/');
 	if (idxSlash == -1) {
 	    return xmppAdmins.contains(from);
-	} else {
-	    final String u = from.substring(0, idxSlash);
-	    return xmppAdmins.contains(u);
 	}
+	final String u = from.substring(0, idxSlash);
+	return xmppAdmins.contains(u);
     }
     
     private static boolean checkSubscribed(final Connection connection, 

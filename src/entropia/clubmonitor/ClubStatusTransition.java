@@ -25,9 +25,10 @@ final class ClubStatusTransition extends PublicOnlyTrigger {
 		return;
 	    case UNINITIALIZED:
 		return;
+	    default:
+	        throw new IllegalArgumentException("illegal state "
+	                + fensterOffenStatus.toString());
 	    }
-	    throw new IllegalArgumentException("illegal state "
-		    + fensterOffenStatus.toString());
 	case LOW:
 	    switch (fensterOffenStatus) {
 	    case HIGH:
@@ -42,13 +43,15 @@ final class ClubStatusTransition extends PublicOnlyTrigger {
 		return;
 	    case UNINITIALIZED:
 		return;
+	    default:
+	        throw new IllegalArgumentException("illegal state "
+	                + fensterOffenStatus.toString());
 	    }
-	    throw new IllegalArgumentException("illegal state "
-		    + fensterOffenStatus.toString());
 	case UNINITIALIZED:
 	    return;
+	default:
+	    throw new IllegalArgumentException("illegal state "
+	            + clubOffen.toString());
 	}
-	throw new IllegalArgumentException("illegal state "
-		+ clubOffen.toString());
     }
 }

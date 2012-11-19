@@ -17,7 +17,7 @@ public class ClubBusTrigger extends PublicOnlyTrigger implements Runnable {
     enum Status {
 	POWER_DOWN,
 	POWER_UP;
-    };
+    }
     
     private static final LinkedBlockingDeque<Status> queue =
 	    new LinkedBlockingDeque<Status>();

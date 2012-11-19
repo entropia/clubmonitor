@@ -35,9 +35,8 @@ public class WebClient {
 	    final String responseMessage = con.getResponseMessage();
 	    if (responseMessage != null) {
 		throw new IOException(responseMessage);
-	    } else {
-		throw new IOException("response code: " + responseCode);
 	    }
+	    throw new IOException("response code: " + responseCode);
 	}
     }
     
@@ -104,6 +103,7 @@ public class WebClient {
         return new URL(url, "?" + p);
     }
     
+    @SuppressWarnings("resource")
     public static JsonObject getJsonElement(final URL url) throws IOException {
         final HttpURLConnection c = (HttpURLConnection) url.openConnection();
         try {

@@ -107,7 +107,7 @@ final class AuthServer implements HttpHandler {
         }
     }
 
-    private void sendAnswer(HttpExchange exchange, final String answer)
+    private static void sendAnswer(HttpExchange exchange, final String answer)
 	    throws IOException {
 	final byte[] bytes = answer.getBytes(Charsets.US_ASCII);
 	setContentType(exchange, "text/plain; charset=US-ASCII");
