@@ -19,6 +19,7 @@ import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.base.Charsets;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.HttpExchange;
@@ -27,7 +28,7 @@ import com.sun.net.httpserver.HttpHandler;
 import entropia.clubmonitor.TernaryStatusRegister.RegisterState;
 
 final class StatusServer implements HttpHandler {
-    private static Logger logger = LoggerFactory.getLogger(WebServer.class);
+    private static Logger logger = LoggerFactory.getLogger(StatusServer.class);
     
     private static ThreadLocal<Gson> gson = new ThreadLocal<Gson>() {
         @Override
@@ -47,9 +48,9 @@ final class StatusServer implements HttpHandler {
             final byte[] bytes;
             // backward compatibility, yay
             if ("/".equals(exchange.getRequestURI().getPath())) {
-                bytes = oldjson().getBytes();
+                bytes = oldjson().getBytes(Charsets.UTF_8);
             } else if ("/json".equals(exchange.getRequestURI().getPath())) {
-                bytes = json().getBytes();
+                bytes = json().getBytes(Charsets.UTF_8);
             } else {
                 replyWithNotFound(exchange);
                 return;

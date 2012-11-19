@@ -54,9 +54,7 @@ final class MulticastNotifier extends PublicOnlyTrigger implements Runnable {
 
     private static DatagramPacket getPacket() throws SocketException {
 	byte[] bytes = StatusServer.json().getBytes(Charsets.US_ASCII);
-	final DatagramPacket packet = new DatagramPacket(bytes,
-	    bytes.length, address);
-	return packet;
+	return new DatagramPacket(bytes, bytes.length, address);
     }
 
 

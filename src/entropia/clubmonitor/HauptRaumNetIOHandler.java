@@ -138,7 +138,7 @@ final class HauptRaumNetIOHandler implements Runnable {
 			IOUtils.readBytesStrict(inputStream, ACK.length);
 		if (!Arrays.equals(bytes, ACK)) {
 		    throw new IllegalStateException("stream unsynchronized: "
-			    + new String(bytes));
+			    + new String(bytes, Charsets.US_ASCII));
 		}
 	    }
 	}

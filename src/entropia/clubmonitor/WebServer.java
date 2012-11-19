@@ -56,7 +56,7 @@ final class WebServer {
     
     private void init() throws Exception {
 	server = HttpServer.create(Config.getWebServerPort(), 0);
-	final Executor httpExecutor = newExecutor();
+	final Executor httpExecutor = Executors.newCachedThreadPool();
         server.setExecutor(httpExecutor);
         setupJsonContext(server.createContext("/"));
         setupAuthServerContext(server.createContext("/auth"));
@@ -135,11 +135,6 @@ final class WebServer {
 
     static void replyWithOk(HttpExchange exchange) throws IOException {
         replyWithInt(exchange, 200);
-    }
-    
-    private static Executor newExecutor() {
-	ExecutorService threadPool = Executors.newCachedThreadPool();
-	return threadPool;
     }
     
     private static final class HttpLoggerFilter extends Filter {

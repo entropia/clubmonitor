@@ -43,18 +43,22 @@ public enum TriggerPort {
 	return forClazz;
     }
     
+    private static byte[] copy(byte[] ts) {
+        return Arrays.copyOf(ts, ts.length);
+    }
+    
     public byte[] getOnCmd() {
 	if (inverted) {
-	    return off;
+	    return copy(off);
 	}
-	return on;
+	return copy(on);
     }
     
     public byte[] getOffCmd() {
 	if (inverted) {
-	    return on;
+	    return copy(on);
 	}
-	return off;
+	return copy(off);
     }
     
     public void offon(int seconds) {
