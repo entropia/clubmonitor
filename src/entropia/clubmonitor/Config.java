@@ -377,7 +377,6 @@ public enum Config {
 	}
     }
     
-    @SuppressWarnings("unused")
     private static void urlTest(String name, String value) {
 	try {
 	    new URL(value);
