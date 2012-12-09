@@ -76,11 +76,11 @@ public class WebClient {
         final List<String> l = Arrays.asList(args);
         final Iterator<String> it = l.iterator();
         while (it.hasNext()) {
-            final String key = urlencode(it.next());
+            final String key = it.next();
             if (!it.hasNext()) {
                 throw new IllegalArgumentException("length of args % 2 != 0");
             }
-            final String value = urlencode(it.next());
+            final String value = it.next();
             map.put(key, value);
         }
         return encodeParam(Collections.unmodifiableMap(map));
@@ -100,7 +100,7 @@ public class WebClient {
     public static URL getURL(final URL url, final String... params)
             throws UnsupportedEncodingException, MalformedURLException {
         final String p = buildParams(params);
-        return new URL(url, "?" + p);
+        return new URL(url.toExternalForm() + "?" + p);
     }
     
     @SuppressWarnings("resource")
