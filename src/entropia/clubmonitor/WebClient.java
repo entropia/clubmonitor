@@ -90,8 +90,8 @@ public class WebClient {
             throws UnsupportedEncodingException {
         final List<String> l = new ArrayList<String>(params.size());
         for (final Map.Entry<String, String> e : params.entrySet()) {
-            final String k = URLEncoder.encode(e.getKey(), "UTF-8");
-            final String v = URLEncoder.encode(e.getValue(), "UTF-8");
+            final String k = e.getKey();
+            final String v = e.getValue();
             l.add(k + "=" + v);
         }
         return Joiner.on("&").join(l);

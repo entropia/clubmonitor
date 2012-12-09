@@ -68,7 +68,7 @@ public final class FhemTimerTask extends TimerTask {
 	try {
 	    logger.info("FhemTrigger timer expired");
 	    setDesiredTemp();
-	    final String cmd = "jsonlist " + RADIATOR_CENTRAL_NAME;
+	    final String cmd = "jsonlist+" + RADIATOR_CENTRAL_NAME;
 	    final URL url = WebClient.getURL(FHEM_CMD_URL,
 	            "cmd", cmd, "XHR","1");
 	    final JsonObject o = WebClient.getJsonElement(url);
