@@ -29,7 +29,7 @@ public final class FhemTimerTask extends TimerTask {
     private static final AtomicBoolean doUpdate = new AtomicBoolean(true);
     
     private static String getCmdDesiredTemp(final String temp) {
-        return String.format("set %s desired-temp %s", RADIATOR_CENTRAL_NAME, temp);
+        return String.format("set+%s+desired-temp+%s", RADIATOR_CENTRAL_NAME, temp);
     }
     
     private static Map<String,String> createCmdMap(final String cmd) {
