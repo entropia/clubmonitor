@@ -18,6 +18,8 @@ import javax.xml.validation.SchemaFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tmatesoft.svn.core.SVNException;
+import org.w3c.dom.ls.LSInput;
+import org.w3c.dom.ls.LSResourceResolver;
 
 import entropia.clubmonitor.Config;
 import entropia.clubmonitor.types.Uid;
@@ -31,11 +33,22 @@ public final class ClubKey {
     private static final SubversionFileProvider svn;
     private static final JAXBContext jaxbContext;
     
+    private final static class NoResourceResolver implements LSResourceResolver {
+        @Override
+        public LSInput resolveResource(String type, String namespaceURI,
+                String publicId, String systemId, String baseURI) {
+            throw new RuntimeException();
+        }
+    }
+    private static final NoResourceResolver NO_RESOURCE_RESOLVER =
+            new NoResourceResolver();
+
     static {
         try {
             final URL schemaFile = ClubKey.class.getResource("clubkey.xsd");
             final SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
             factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+            factory.setResourceResolver(NO_RESOURCE_RESOLVER);
             schema = factory.newSchema(schemaFile);
             svn = new SubversionFileProvider(Config.getSVNRepo());
             jaxbContext = JAXBContext.newInstance(Card.class);
