@@ -106,7 +106,7 @@ enum XMPPThread implements Runnable {
     private static final long RESTART_WAIT_SECONDS =
 	    TimeUnit.MINUTES.toMillis(1);
 
-    private void run_() throws InterruptedException {
+    private void _run() throws InterruptedException {
 	try {
 	    final XMPPConnection connection = initConnection();
 	    try {
@@ -126,7 +126,7 @@ enum XMPPThread implements Runnable {
 	final String threadName = Thread.currentThread().getName();
 	while (!Thread.interrupted()) {
 	    try {
-		run_();
+		_run();
 	    } catch (final InterruptedException e) {
 		Thread.currentThread().interrupt();
 	    } catch (final Exception e) {
