@@ -55,6 +55,7 @@ public final class FhemTimerTask extends TimerTask {
         }
     }
     
+    @SuppressWarnings("unused")
     private static void syncTime() {
         try {
             // TODO: implement

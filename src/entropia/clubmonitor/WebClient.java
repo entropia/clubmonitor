@@ -66,6 +66,7 @@ public class WebClient {
 	}
     }
     
+    @SuppressWarnings("unused")
     private static String urlencode(final String s)
             throws UnsupportedEncodingException {
         return URLEncoder.encode(s, Charsets.UTF_8.name());
@@ -103,7 +104,6 @@ public class WebClient {
         return new URL(url.toExternalForm() + "?" + p);
     }
     
-    @SuppressWarnings("resource")
     public static JsonObject getJsonElement(final URL url) throws IOException {
         final HttpURLConnection c = (HttpURLConnection) url.openConnection();
         try {

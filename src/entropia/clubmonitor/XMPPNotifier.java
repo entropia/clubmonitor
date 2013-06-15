@@ -132,7 +132,7 @@ final class XMPPNotifier extends PublicOnlyTrigger {
 	}
     }
 
-    private static void recover(@SuppressWarnings("unused") final TernaryStatusRegister changed) {
+    private static void recover(final TernaryStatusRegister changed) {
 	if (HW_FEHLER.status() == HIGH) {
 	    send(StatusChange.FEHLER_ON);
 	    return;
