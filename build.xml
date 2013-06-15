@@ -57,13 +57,13 @@
 			classpathref="ClubMonitor.Classpath" includeantruntime="false"
 			listfiles="true" verbose="false"
 			debug="true" debuglevel="lines,vars,source"
-			source="6" target="6"
+			source="7" target="7"
 			/>
 		<javac srcdir="${src-dir}" destdir="${build-dir}"
 			classpathref="ClubMonitor.Classpath" includeantruntime="false"
 			listfiles="true" verbose="false"
 			debug="true" debuglevel="lines,vars,source"
-			source="6" target="6"
+			source="7" target="7"
 			/>
 		<copy file="${basedir}/xml-schema/clubkey.xsd"
 			todir="${build-dir}/entropia/clubmonitor/clubkey/" />
@@ -74,7 +74,7 @@
 			classpathref="ClubMonitorTest.Classpath" includeantruntime="false"
 			listfiles="true" verbose="false"
 			debug="true" debuglevel="lines,vars,source"
-			source="6" target="6"
+			source="7" target="7"
 			/>
 	</target>
 
