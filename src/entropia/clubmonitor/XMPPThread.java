@@ -20,10 +20,12 @@ import org.jivesoftware.smack.Roster.SubscriptionMode;
 import org.jivesoftware.smack.RosterEntry;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
+import org.jivesoftware.smack.keepalive.KeepAliveManager;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Packet;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.packet.Presence.Type;
+import org.jivesoftware.smack.ping.PingFailedListener;
 import org.jivesoftware.smackx.ServiceDiscoveryManager;
 import org.jivesoftware.smackx.filetransfer.FileTransferListener;
 import org.jivesoftware.smackx.filetransfer.FileTransferManager;
@@ -75,6 +77,13 @@ enum XMPPThread implements Runnable {
 	return config;
     }
 
+    private static final PingFailedListener EMPTY_PING_FAILED_LISTENER =
+            new PingFailedListener() {
+                @Override
+                public void pingFailed() {
+                }
+            };
+    
     private static XMPPConnection initConnection() throws XMPPException {
 	final XMPPConnection connection = new XMPPConnection(getConfig());
 	connection.connect();
@@ -83,6 +92,8 @@ enum XMPPThread implements Runnable {
 		Config.getXMPPPassword(),
 		Config.getXMPPResource());
 	FileTransferNegotiator.setServiceEnabled(connection, true);
+	KeepAliveManager.getInstanceFor(connection)
+	    .addPingFailedListener(EMPTY_PING_FAILED_LISTENER);
 	logger.debug("xmpp connection established");
 	final Iterator<String> features =
 		ServiceDiscoveryManager.getInstanceFor(connection).getFeatures();
