@@ -202,16 +202,8 @@ enum XMPPThread implements Runnable {
 	    @Override
 	    public void fileTransferRequest(FileTransferRequest request) {
 		try {
-		    final File temp =
-			    File.createTempFile(XMPPThread.class.getName(), ".raw");
-		    try {
-			logger.info("file event from " + request.getRequestor());
-			FileHandlerThread.add(request);
-		    } finally {
-			if (!temp.delete()) {
-			    throw new IOException("temp file delete");
-			}
-		    }
+		    logger.info("file event from " + request.getRequestor());
+		    FileHandlerThread.add(request);
 		} catch (Exception e) {
 		    logger.warn("error receiving file", e);
 		}
