@@ -54,15 +54,15 @@ public enum TriggerPort {
     }
     
     public byte[] getOnCmd() {
-	if (inverted)
-	    return copy(off);
-	return copy(on);
+        if (inverted)
+            return copy(off);
+        return copy(on);
     }
     
     public byte[] getOffCmd() {
         if (inverted)
-                return copy(on); 
-	return copy(off);
+            return copy(on);
+        return copy(off);
     }
     
     public void offon(int seconds) {
