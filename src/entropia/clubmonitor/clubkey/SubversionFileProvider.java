@@ -28,13 +28,10 @@ public final class SubversionFileProvider {
             throw new NullPointerException();
         }
         final String xmlFile = uid.toString() + ".xml";
-        final ByteArrayOutputStream out = new ByteArrayOutputStream();
-        try {
+        try (final ByteArrayOutputStream out = new ByteArrayOutputStream()) {
             repo.getFile(xmlFile, SVNRepository.INVALID_REVISION, null, out);
-        } finally {
-            out.close();
+            return out.toString(Charsets.UTF_8.name());
         }
-        return out.toString(Charsets.UTF_8.name());
     }
     
     synchronized long getSvnRevision() throws SVNException {

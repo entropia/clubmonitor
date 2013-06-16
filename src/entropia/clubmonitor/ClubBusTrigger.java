@@ -20,7 +20,7 @@ public class ClubBusTrigger extends PublicOnlyTrigger implements Runnable {
     }
     
     private static final LinkedBlockingDeque<Status> queue =
-	    new LinkedBlockingDeque<Status>();
+	    new LinkedBlockingDeque<>();
 
     @Override
     public void run() {
@@ -60,7 +60,7 @@ public class ClubBusTrigger extends PublicOnlyTrigger implements Runnable {
     }
 
     @Override
-    public void trigger(TernaryStatusRegister register) throws IOException {
+    public void trigger(TernaryStatusRegister register) {
 	if (!Config.isClubBusEnabled()) {
 	    return;
 	}

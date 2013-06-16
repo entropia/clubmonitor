@@ -58,11 +58,8 @@ final class StatusServer implements HttpHandler {
             setContentType(exchange, "application/json; charset=UTF-8");
             disableCaching(exchange);
             exchange.sendResponseHeaders(200, bytes.length);
-            final OutputStream responseStream = exchange.getResponseBody();
-            try {
+            try (final OutputStream responseStream = exchange.getResponseBody()) {
                 responseStream.write(bytes);
-            } finally {
-                responseStream.close();
             }
         } catch (Exception e) {
             logger.warn("exception while handling", e);
@@ -73,7 +70,7 @@ final class StatusServer implements HttpHandler {
     public static String oldjson() {
         final DateFormat timestampFormat = new SimpleDateFormat(
                 "yyyy-MM-dd'T'HH:mm:ss.SSSZ");
-        final Map<String, Object> map = new HashMap<String, Object>();
+        final Map<String, Object> map = new HashMap<>();
         map.put("raintropia", -1);
         map.put("generation", RandomUtils.generation());
         map.put("hardware_fehler",
@@ -95,8 +92,7 @@ final class StatusServer implements HttpHandler {
     }
 
     public static String json() {
-        final Map<String, Map<String, Object>> map =
-                new TreeMap<String, Map<String, Object>>();
+        final Map<String, Map<String, Object>> map = new TreeMap<>();
         for (final TernaryStatusRegister r : TernaryStatusRegister.values()) {
             if (r.isPublic()) { 
                 map.put(r.toString(), r.jsonStatusMap());

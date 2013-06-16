@@ -6,6 +6,7 @@ import org.junit.Assert;
 
 import org.junit.Test;
 
+@SuppressWarnings("static-method")
 public class SyncServiceTest {
 
     private static final long ONE_DAY = TimeUnit.DAYS.toMillis(1);

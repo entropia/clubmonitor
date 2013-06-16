@@ -192,13 +192,10 @@ public enum Config {
 	    throw new IllegalStateException();
 	}
 	configLoaded = true;
-	final InputStream inStream = new FileInputStream(configFile);
-	try {
+	try (final InputStream inStream = new FileInputStream(configFile)) {
 	    PROPERTIES.load(inStream);
 	} catch (IOException e) {
 	    throw new IOException("error reading config file", e);
-	} finally {
-	    inStream.close();
 	}
     }
     
@@ -249,7 +246,7 @@ public enum Config {
     }
     
     private static void checkUnkownConfigDirectives() {
-	final HashSet<String> set = new HashSet<String>(
+	final HashSet<String> set = new HashSet<>(
 		PROPERTIES.stringPropertyNames());
 	for (Config c : Config.values()) {
 	    set.remove(c.toString());
@@ -263,7 +260,7 @@ public enum Config {
     
     public static void startupCheck() {
 	checkUnkownConfigDirectives();
-	final List<String> errConfigs = new LinkedList<String>();
+	final List<String> errConfigs = new LinkedList<>();
 	for (final Field f : Config.class.getDeclaredFields()) {
 	    if (!f.isEnumConstant()) {
 		continue;
@@ -358,6 +355,7 @@ public enum Config {
 	}
     }
     
+    @SuppressWarnings("unused")
     private static void urlTest(String name, String value) {
 	try {
 	    new URL(value);

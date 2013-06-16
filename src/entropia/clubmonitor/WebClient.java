@@ -72,8 +72,8 @@ public class WebClient {
         return URLEncoder.encode(s, Charsets.UTF_8.name());
     }
     
-    public static String buildParams(final String... args) throws UnsupportedEncodingException {
-        final Map<String,String> map = new HashMap<String,String>(args.length / 2);
+    public static String buildParams(final String... args) {
+        final Map<String,String> map = new HashMap<>(args.length / 2);
         final List<String> l = Arrays.asList(args);
         final Iterator<String> it = l.iterator();
         while (it.hasNext()) {
@@ -87,9 +87,8 @@ public class WebClient {
         return encodeParam(Collections.unmodifiableMap(map));
     }
     
-    public static String encodeParam(final Map<String,String> params)
-            throws UnsupportedEncodingException {
-        final List<String> l = new ArrayList<String>(params.size());
+    public static String encodeParam(final Map<String,String> params) {
+        final List<String> l = new ArrayList<>(params.size());
         for (final Map.Entry<String, String> e : params.entrySet()) {
             final String k = e.getKey();
             final String v = e.getValue();
@@ -99,7 +98,7 @@ public class WebClient {
     }
     
     public static URL getURL(final URL url, final String... params)
-            throws UnsupportedEncodingException, MalformedURLException {
+            throws MalformedURLException {
         final String p = buildParams(params);
         return new URL(url.toExternalForm() + "?" + p);
     }
@@ -107,8 +106,9 @@ public class WebClient {
     public static JsonObject getJsonElement(final URL url) throws IOException {
         final HttpURLConnection c = (HttpURLConnection) url.openConnection();
         try {
-            final InputStreamReader in = new InputStreamReader(c.getInputStream());
-            return new JsonParser().parse(in).getAsJsonObject();
+            try (final InputStreamReader in = new InputStreamReader(c.getInputStream())) {
+                return new JsonParser().parse(in).getAsJsonObject();
+            }
         } finally {
             c.disconnect();
         }

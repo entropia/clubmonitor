@@ -25,7 +25,7 @@ enum FileHandlerThread implements Runnable {
 	    LoggerFactory.getLogger(FileHandlerThread.class);
     
     private static final LinkedBlockingDeque<FileTransferRequest> queue =
-	    new LinkedBlockingDeque<FileTransferRequest>();
+	    new LinkedBlockingDeque<>();
     
     
     private static final File tempDir = new File("/tmp");
@@ -66,16 +66,10 @@ enum FileHandlerThread implements Runnable {
             final File tempFile) throws XMPPException, FileNotFoundException,
             IOException {
 	logger.debug("writing jabber stream to " + tempFile.getPath());
-	final InputStream in = first.recieveFile();
-	try {
-	    final OutputStream out = new FileOutputStream(tempFile);
-	    try {
+	try (final InputStream in = first.recieveFile()) {
+	    try (final OutputStream out = new FileOutputStream(tempFile)) {
 		copyStream(in, out);
-	    } finally {
-		out.close();
 	    }
-	} finally {
-	    in.close();
 	}
     }   
 
@@ -94,13 +88,10 @@ enum FileHandlerThread implements Runnable {
 
     private static void writeProcessOutput(final Process process)
             throws IOException {
-	final InputStream inputStream = new BufferedInputStream(
-		process.getInputStream());
-	final String mpg123Output;
-	try {
+        final String mpg123Output;
+	try (final InputStream inputStream = new BufferedInputStream(
+		process.getInputStream())) {
 	    mpg123Output = slurp(inputStream);
-	} finally {
-	    inputStream.close();
 	}
 	if (!mpg123Output.isEmpty()) {
 	    final String s = stripTrailingNL(mpg123Output);

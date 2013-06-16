@@ -17,7 +17,7 @@ public abstract class Trigger {
     
     public final static Collection<Trigger> trigger;
     static {
-	final Collection<Trigger> c = new LinkedList<Trigger>(Arrays.asList(
+	final Collection<Trigger> c = new LinkedList<>(Arrays.asList(
 	            new ClubKeyTransition(),
 		    new ClubStatusTransition(),
 		    new XMPPNotifier(),

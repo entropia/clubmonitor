@@ -35,8 +35,8 @@ public enum TriggerPort {
 	this.on = String.format("SETPORT %d.%d\r\n", portNumber, 1).getBytes(Charsets.US_ASCII);
 	this.off = String.format("SETPORT %d.%d\r\n", portNumber, 0).getBytes(Charsets.US_ASCII);
 	this.inverted = inverted;
-	this.nextCommands =
-	        new DelayQueue<Event>(Arrays.asList(new Event(getOffCmd(), 0)));
+	this.nextCommands = new DelayQueue<>(
+	        Arrays.asList(new Event(getOffCmd(), 0)));
     }
 
     public Class<?> getForClass() {

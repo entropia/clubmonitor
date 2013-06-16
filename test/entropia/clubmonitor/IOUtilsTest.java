@@ -22,25 +22,28 @@ public final class IOUtilsTest {
     
     @Test
     public void testReadBytesStrict1() throws IOException {
-	InputStream one = inputStreamFromString("1\r\n");
-	InputStream zero = inputStreamFromString("0\r\n");
-	byte[] bytes = readBytesStrict(one, 3);
-	verifyBinaryDigitLine(bytes);
-	bytes = readBytesStrict(zero, 3);
-	verifyBinaryDigitLine(bytes);
+	try (InputStream one = inputStreamFromString("1\r\n");
+	InputStream zero = inputStreamFromString("0\r\n")) {
+	    byte[] bytes = readBytesStrict(one, 3);
+	    verifyBinaryDigitLine(bytes);
+	    bytes = readBytesStrict(zero, 3);
+	    verifyBinaryDigitLine(bytes);
+	}
     }
     
     @Test
     public void testReadBytesEmpty() throws IOException {
-	InputStream empty = inputStreamFromString("");
-	byte[] bytes = readBytesStrict(empty, 0);
-	assertEquals(0, bytes.length);
+	try (InputStream empty = inputStreamFromString("")) {
+	    byte[] bytes = readBytesStrict(empty, 0);
+	    assertEquals(0, bytes.length);
+	}
     }
     
     @Test(expected=IOException.class)
     public void testReadBytesStrict2() throws IOException {
-	InputStream broken = inputStreamFromString("1");
-	readBytesStrict(broken, 2);
+	try (InputStream broken = inputStreamFromString("1")) {
+	    readBytesStrict(broken, 2);
+	}
     }
     
     
@@ -50,10 +53,11 @@ public final class IOUtilsTest {
 		0, 1, 10, 100, 1000, 10000, 100000
 	};
 	for (long l : longs) {
-	    InputStream in =
-		    inputStreamFromString(Long.toString(l) + "\r\n");
-	    final long r = readDigits(in);
-	    assertEquals(l, r);
+	    try (InputStream in =
+		    inputStreamFromString(Long.toString(l) + "\r\n")) {
+	        final long r = readDigits(in);
+	        assertEquals(l, r);
+	    }
 	}
     }
     
@@ -63,10 +67,11 @@ public final class IOUtilsTest {
 		0, 1, 10, 100, 1000, 10000, 100000
 	};
 	for (long l : longs) {
-	    InputStream in =
-		    inputStreamFromString(Long.toString(l) + "\r");
-	    final long r = readDigits(in);
-	    assertEquals(l, r);
+	    try (InputStream in =
+		    inputStreamFromString(Long.toString(l) + "\r")) {
+	        final long r = readDigits(in);
+	        assertEquals(l, r);
+	    }
 	}
     }
     
@@ -76,10 +81,11 @@ public final class IOUtilsTest {
 		0, 1, 10, 100, 1000, 10000, 100000
 	};
 	for (long l : longs) {
-	    InputStream in =
-		    inputStreamFromString(Long.toString(l) + "\n");
-	    final long r = readDigits(in);
-	    assertEquals(l, r);
+	    try (InputStream in =
+		    inputStreamFromString(Long.toString(l) + "\n")) {
+	        final long r = readDigits(in);
+	        assertEquals(l, r);
+	    }
 	}
     }
     

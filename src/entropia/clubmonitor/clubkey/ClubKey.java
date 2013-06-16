@@ -34,6 +34,7 @@ public final class ClubKey {
     private static final JAXBContext jaxbContext;
     
     private final static class NoResourceResolver implements LSResourceResolver {
+        @SuppressWarnings("unused")
         @Override
         public LSInput resolveResource(String type, String namespaceURI,
                 String publicId, String systemId, String baseURI) {

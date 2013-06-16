@@ -241,7 +241,7 @@ final class WebServer {
     public static Map<String,String> readReply(InputStream in, int size)
             throws IOException, DataFormatException {
         final String charset = Charsets.UTF_8.name();
-        final Map<String,String> map = new HashMap<String,String>();
+        final Map<String,String> map = new HashMap<>();
         final String content = new String(IOUtils.readBytesStrict(in, size),
                 Charsets.US_ASCII);
         final String[] fields = content.split("&");

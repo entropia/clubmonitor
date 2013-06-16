@@ -79,6 +79,7 @@ enum XMPPThread implements Runnable {
             new PingFailedListener() {
                 @Override
                 public void pingFailed() {
+                    /* EMPTY */
                 }
             };
     
@@ -134,7 +135,7 @@ enum XMPPThread implements Runnable {
     }
 
     public LinkedBlockingDeque<XMPPNotifier.StatusChange> status =
-	    new LinkedBlockingDeque<XMPPNotifier.StatusChange>();
+	    new LinkedBlockingDeque<>();
     
     private void process(Connection connection)
 	    throws InterruptedException, XMPPException {

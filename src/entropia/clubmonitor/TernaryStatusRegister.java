@@ -51,7 +51,7 @@ public enum TernaryStatusRegister {
 
     public Map<String,Object> jsonStatusMap() {
 	synchronized (lock) {
-	    final Map<String,Object> status = new TreeMap<String,Object>();
+	    final Map<String,Object> status = new TreeMap<>();
 	    final boolean boolStatus = (status() == RegisterState.HIGH)
 		    ? true : false; 
 	    status.put("lastChange", lastChangeTimestampSeconds);

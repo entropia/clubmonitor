@@ -25,7 +25,7 @@ public enum ADCRegister {
     
     public Map<String, Object> jsonStatusMap() {
 	synchronized (lock) {
-	    final Map<String, Object> map = new TreeMap<String,Object>();
+	    final Map<String, Object> map = new TreeMap<>();
 	    map.put("val", value);
 	    return Collections.unmodifiableMap(map);
 	}

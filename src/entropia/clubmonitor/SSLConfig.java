@@ -36,11 +36,8 @@ final class SSLConfig {
 
     private static KeyStore getCertsStore(File keyStorePath) throws Exception {
         final KeyStore keyStore = KeyStore.getInstance("JCEKS");
-        final FileInputStream keyStream = new FileInputStream(keyStorePath);
-        try {
+        try (final FileInputStream keyStream = new FileInputStream(keyStorePath)) {
             keyStore.load(keyStream, Config.getKeyStorePw());
-        } finally {
-            keyStream.close();
         }
         return keyStore;
     }

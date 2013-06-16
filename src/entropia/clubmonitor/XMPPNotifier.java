@@ -1,14 +1,12 @@
 package entropia.clubmonitor;
 
+import static entropia.clubmonitor.TernaryStatusRegister.CARDREADER_KAPUTT;
 import static entropia.clubmonitor.TernaryStatusRegister.CLUB_OFFEN;
 import static entropia.clubmonitor.TernaryStatusRegister.FENSTER_OFFEN;
 import static entropia.clubmonitor.TernaryStatusRegister.HW_FEHLER;
-import static entropia.clubmonitor.TernaryStatusRegister.CARDREADER_KAPUTT;
 import static entropia.clubmonitor.TernaryStatusRegister.OVERRIDE_WINDOWS;
 import static entropia.clubmonitor.TernaryStatusRegister.RegisterState.HIGH;
 import static entropia.clubmonitor.TernaryStatusRegister.RegisterState.LOW;
-
-import java.io.IOException;
 
 import org.jivesoftware.smack.packet.Presence.Mode;
 
@@ -63,8 +61,7 @@ final class XMPPNotifier extends PublicOnlyTrigger {
     }
 
     @Override
-    public void trigger(final TernaryStatusRegister changed)
-	    throws IOException {
+    public void trigger(final TernaryStatusRegister changed) {
         if (!Config.isXMPPEnabled()) {
             return;
         }
@@ -132,7 +129,8 @@ final class XMPPNotifier extends PublicOnlyTrigger {
 	}
     }
 
-    private static void recover(final TernaryStatusRegister changed) {
+    private static void recover(
+            @SuppressWarnings("unused") final TernaryStatusRegister changed) {
 	if (HW_FEHLER.status() == HIGH) {
 	    send(StatusChange.FEHLER_ON);
 	    return;

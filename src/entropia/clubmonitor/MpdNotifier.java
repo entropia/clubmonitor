@@ -37,7 +37,7 @@ final class MpdNotifier extends PublicOnlyTrigger implements Runnable {
     }
     
     private static final LinkedBlockingDeque<Status> queue =
-            new LinkedBlockingDeque<Status>();
+            new LinkedBlockingDeque<>();
     
     private static final Pattern ACK_PATTERN = Pattern.compile("\\AOK\\z");
     
@@ -131,7 +131,7 @@ final class MpdNotifier extends PublicOnlyTrigger implements Runnable {
     }
 
     @Override
-    public void trigger(TernaryStatusRegister register) throws IOException {
+    public void trigger(TernaryStatusRegister register) {
         if (!Config.isMPDEnabled()) {
             return;
         }

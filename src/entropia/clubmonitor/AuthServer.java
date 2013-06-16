@@ -113,13 +113,10 @@ final class AuthServer implements HttpHandler {
 	setContentType(exchange, "text/plain; charset=US-ASCII");
 	disableCaching(exchange);
 	exchange.sendResponseHeaders(200, (bytes.length > 0) ? bytes.length : -1);
-	final OutputStream responseBody = exchange.getResponseBody();
-	try {
+	try (final OutputStream responseBody = exchange.getResponseBody()) {
 	    if (bytes.length > 0) {
 	        responseBody.write(bytes);
 	    }
-	} finally {
-	    responseBody.close();
 	}
     }
 }

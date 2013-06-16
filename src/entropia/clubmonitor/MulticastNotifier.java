@@ -48,7 +48,7 @@ final class MulticastNotifier extends PublicOnlyTrigger implements Runnable {
 
     @Override
     public void trigger(
-            TernaryStatusRegister register) {
+            @SuppressWarnings("unused") TernaryStatusRegister register) {
         TimeUtils.scheduler.schedule(this, 0, TimeUnit.NANOSECONDS);
     }
 
