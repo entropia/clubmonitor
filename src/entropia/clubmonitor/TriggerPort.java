@@ -47,8 +47,9 @@ public enum TriggerPort {
 	return Null.assertNonNull(forClazz);
     }
     
-    private static byte[] copy(@Nullable byte[] ts) {
-        ts = Null.assertNonNull(ts);
+    private static byte[] copy(final @Nullable byte[] ts) {
+        if (ts == null)
+            throw new NullPointerException();
         return Null.assertNonNull(Arrays.copyOf(ts, ts.length));
     }
     
