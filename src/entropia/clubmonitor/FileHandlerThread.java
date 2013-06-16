@@ -43,7 +43,7 @@ enum FileHandlerThread implements Runnable {
 	return t;
     }
     
-    private static void run_()
+    private static void _run()
 	    throws InterruptedException, IOException, XMPPException {
 	while (true) {
 	    final FileTransferRequest request = queue.takeFirst();
@@ -139,7 +139,7 @@ enum FileHandlerThread implements Runnable {
 	logger.info("started");
 	while (!Thread.interrupted()) {
 	    try {
-		run_();
+		_run();
 	    } catch (InterruptedException e) {
 		Thread.currentThread().interrupt();
 	    } catch (Exception e) {
