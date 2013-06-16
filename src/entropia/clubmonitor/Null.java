@@ -12,9 +12,9 @@ public class Null {
         if (t == null) {
             final NullPointerException npe = new NullPointerException();
             final StackTraceElement[] stes = npe.getStackTrace();
-            if (stes != null && stes.length >= 2 && stes[1] != null) {
+            if (stes != null && stes.length >= 2 && stes[1] != null)
                 logger.error(ERROR_PREFIX + stes[1].toString());
-            } else
+            else
                 logger.error(ERROR_PREFIX + "unkown location");
             throw npe;
         }
