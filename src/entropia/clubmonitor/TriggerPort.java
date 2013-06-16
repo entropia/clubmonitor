@@ -48,8 +48,7 @@ public enum TriggerPort {
     }
     
     private static byte[] copy(@Nullable byte[] ts) {
-        if (ts == null)
-            return new byte[0];
+        ts = Null.assertNonNull(ts);
         return Null.assertNonNull(Arrays.copyOf(ts, ts.length));
     }
     
@@ -60,9 +59,9 @@ public enum TriggerPort {
     }
     
     public byte[] getOffCmd() {
-        final byte[] bytearray = Null.assertNonNull(
-                inverted ? on : off); 
-	return copy(bytearray);
+        if (inverted)
+                return copy(on); 
+	return copy(off);
     }
     
     public void offon(int seconds) {
@@ -117,13 +116,18 @@ public enum TriggerPort {
 
 	@Override
 	public int compareTo(@Nullable Delayed o) {
-	    return (int) (getDelay(Null.assertNonNull(TimeUnit.NANOSECONDS))
-		    - Null.assertNonNull(o).getDelay(TimeUnit.NANOSECONDS));
+	    if (o == null)
+	        throw new NullPointerException();
+	    final TimeUnit nanoSeconds = Null.assertNonNull(
+	            TimeUnit.NANOSECONDS);
+            return (int) (getDelay(nanoSeconds) - o.getDelay(nanoSeconds));
 	}
 
 	@Override
         public long getDelay(@Nullable TimeUnit unit) {
-	    return Null.assertNonNull(unit).convert(timeout - System.nanoTime(),
+	    if (unit == null)
+	        throw new NullPointerException();
+	    return unit.convert(timeout - System.nanoTime(),
 	            unit);
         }
 

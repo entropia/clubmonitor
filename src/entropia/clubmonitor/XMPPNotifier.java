@@ -8,8 +8,6 @@ import static entropia.clubmonitor.TernaryStatusRegister.OVERRIDE_WINDOWS;
 import static entropia.clubmonitor.TernaryStatusRegister.RegisterState.HIGH;
 import static entropia.clubmonitor.TernaryStatusRegister.RegisterState.LOW;
 
-import java.util.Objects;
-
 import org.eclipse.jdt.annotation.Nullable;
 import org.jivesoftware.smack.packet.Presence.Mode;
 
@@ -36,7 +34,7 @@ final class XMPPNotifier extends PublicOnlyTrigger {
 	private final Mode mode;
 	private StatusChange(String msg, @Nullable Mode mode, boolean toMuc,
 		boolean toAll) {
-	    this.mode = Objects.requireNonNull(mode);
+	    this.mode = Null.assertNonNull(mode);
 	    this.msg = msg;
 	    this.toMuc = toMuc;
 	    this.toAll = toAll;
@@ -47,15 +45,11 @@ final class XMPPNotifier extends PublicOnlyTrigger {
 	}
 	
 	public boolean deliverToMuc() {
-	    return Null.assertNonNull(toMuc);
+	    return toMuc;
 	}
 	
 	public boolean deliverToAll() {
-	    return Null.assertNonNull(toAll);
-	}
-	
-	public Mode isOnline() {
-	    return Null.assertNonNull(mode);
+	    return toAll;
 	}
 
 	public Mode getMode() {
