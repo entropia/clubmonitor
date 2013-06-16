@@ -22,8 +22,7 @@ public abstract class Trigger {
 		    new ClubStatusTransition(),
 		    new XMPPNotifier(),
 		    new MpdNotifier(),
-		    new ClubBusTrigger(),
-		    new FhemTimerTask.Trigger()));
+		    new ClubBusTrigger()));
 	if (Config.isMulticastEnabled()) {
 	    c.add(new MulticastNotifier());
 	}

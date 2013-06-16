@@ -64,9 +64,6 @@ final class HauptRaumNetIOHandler implements Runnable {
 
     
     private static enum ADCPORTS {
-	/*
-	TEMPERATURE(1, ADCRegister.Temperature)
-	*/
 	;
 
 	private final int portNumber;

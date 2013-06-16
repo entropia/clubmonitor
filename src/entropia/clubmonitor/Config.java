@@ -120,25 +120,6 @@ public enum Config {
     @URLTest
     @MaybeNullIfFalse(CLUB_BUS_ENABLE)
     CLUB_BUS_URL,
-    
-    @BooleanTest
-    @Default("false")
-    FHEM_ENABLE,
-    @URLTest
-    @MaybeNullIfFalse(FHEM_ENABLE)
-    FHEM_CMD_URL,
-    @IntegerTest
-    @Default("3")
-    FHEM_SYNC_MINUTES,
-    @MaybeNullIfFalse(FHEM_ENABLE)
-    FHEM_RADIATOR_CENTRAL_NAME,
-    
-    @MaybeNullIfFalse(FHEM_ENABLE)
-    @RegexTest("\\A[1-3][0-9].{0,5}\\z")
-    FHEM_OPEN_DESIRED_TEMP,
-    @MaybeNullIfFalse(FHEM_ENABLE)
-    @RegexTest("\\A[1-3][0-9].{0,5}\\z")
-    FHEM_CLOSED_DESIRED_TEMP,
     ;
     
     @Retention(RetentionPolicy.RUNTIME)
@@ -533,37 +514,5 @@ public enum Config {
 	} catch (MalformedURLException e) {
 	    return null;
 	}
-    }
-
-    public static boolean isFhemEnabled() {
-	return Boolean.parseBoolean(PROPERTIES.getProperty(FHEM_ENABLE.toString()));
-    }
-    
-    public static URL getFhemCmdURL() {
-	try {
-	    final String property = PROPERTIES.getProperty(FHEM_CMD_URL.toString());
-	    if (property == null) {
-		return null;
-	    }
-	    return new URL(property);
-	} catch (MalformedURLException e) {
-	    return null;
-	}
-    }
-    
-    public static int getFhemSyncMinutes() {
-        return Integer.parseInt(PROPERTIES.getProperty(FHEM_SYNC_MINUTES.toString()));
-    }
-
-    public static String getRadiatorCentralName() {
-        return PROPERTIES.getProperty(FHEM_RADIATOR_CENTRAL_NAME.toString());
-    }
-    
-    public static String getFhemOpenDesiredTemp() {
-        return PROPERTIES.getProperty(FHEM_OPEN_DESIRED_TEMP.toString());
-    }
-    
-    public static String getFhemClosedDesiredTemp() {
-        return PROPERTIES.getProperty(FHEM_CLOSED_DESIRED_TEMP.toString());
     }
 }

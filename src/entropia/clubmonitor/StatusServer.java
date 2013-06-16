@@ -76,8 +76,6 @@ final class StatusServer implements HttpHandler {
         final Map<String, Object> map = new HashMap<String, Object>();
         map.put("raintropia", -1);
         map.put("generation", RandomUtils.generation());
-        map.put("temp", ADCRegister.Temperature.get());
-        map.put("desired_temp", ADCRegister.DesiredTemperature.get());
         map.put("hardware_fehler",
                 TernaryStatusRegister.HW_FEHLER.status() == RegisterState.HIGH ? true : false);
         map.put("club_offen",
