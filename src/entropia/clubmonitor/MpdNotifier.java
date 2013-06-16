@@ -60,20 +60,23 @@ final class MpdNotifier extends PublicOnlyTrigger implements Runnable {
 	}
     }
     
-    private static final Pattern HEADER_PATTERN = Pattern.compile("\\AOK MPD .+\\z");
+    private static final Pattern HEADER_PATTERN = Pattern.compile(
+            "\\AOK MPD .+\\z");
 
     private static final long RETRY_TIMEOUT = TimeUnit.SECONDS.toMillis(5);
     
-    private static final void checkHeader(BufferedReader in) throws IOException {
+    private static final void checkHeader(BufferedReader in)
+            throws IOException {
         final String header = in.readLine();
         if (!HEADER_PATTERN.matcher(header).matches()) {
-            throw new IOException(String.format("illegal header: \"%s\"", header));
+            throw new IOException(String.format("illegal header: \"%s\"",
+                    header));
         }
         logger.info("connected to mpd");
     }
     
-    private static final void checkConnection(BufferedReader in, BufferedWriter out)
-            throws IOException {
+    private static final void checkConnection(BufferedReader in,
+            BufferedWriter out) throws IOException {
         out.write("ping\n");
         out.flush();
         final String answer = in.readLine();
@@ -94,7 +97,8 @@ final class MpdNotifier extends PublicOnlyTrigger implements Runnable {
                             new InputStreamReader(socket.getInputStream()));
                     try {
                         final BufferedWriter out = new BufferedWriter(
-                                new OutputStreamWriter(socket.getOutputStream()));
+                                new OutputStreamWriter(
+                                        socket.getOutputStream()));
                         try {
                             checkHeader(in);
                             checkConnection(in, out);
@@ -108,8 +112,8 @@ final class MpdNotifier extends PublicOnlyTrigger implements Runnable {
                         in.close();
                     }
                 } catch (final IOException e) {
-                    logger.warn(String.format("exeption in %s. Sleeping for %d" +
-                    		" milliseconds.",
+                    logger.warn(String.format("exeption in %s. Sleeping for" +
+                    		" %d milliseconds.",
                 	    name, RETRY_TIMEOUT), e);
                     Thread.sleep(RETRY_TIMEOUT);
                     logger.warn(name + " is ready again for sending commands.");

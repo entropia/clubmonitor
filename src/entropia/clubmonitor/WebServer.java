@@ -16,6 +16,7 @@ import java.util.concurrent.Executors;
 
 import javax.net.ssl.SSLContext;
 
+import org.eclipse.jdt.annotation.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,7 +35,8 @@ import com.sun.net.httpserver.HttpsServer;
 import entropia.clubmonitor.types.DataFormatException;
 
 final class WebServer {
-    private static Logger serverLogger = LoggerFactory.getLogger(WebServer.class);
+    private static Logger serverLogger =
+            LoggerFactory.getLogger(WebServer.class);
     private HttpServer server;
     private HttpsServer sslserver;
     
@@ -47,33 +49,37 @@ final class WebServer {
     private final SyncService syncService;
     
     WebServer(SyncService syncService) {
-	if (syncService == null) {
-	    throw new NullPointerException();
-	}
 	this.syncService = syncService;
+    }
+    
+    private static HttpContext createContext(@Nullable HttpServer server,
+            String path) {
+        return Null.assertNonNull(Null.assertNonNull(server).createContext(
+                path));
     }
     
     private void init() throws Exception {
 	server = HttpServer.create(Config.getWebServerPort(), 0);
 	final Executor httpExecutor = Executors.newCachedThreadPool();
         server.setExecutor(httpExecutor);
-        setupJsonContext(server.createContext("/"));
-        setupAuthServerContext(server.createContext("/auth"));
+        setupJsonContext(createContext(server, "/"));
+        setupAuthServerContext(createContext(server, "/auth"));
 
         if (Config.isSSLEnabled()) {
             sslserver = HttpsServer.create(Config.getSecureWebServerPort(), 0);
             sslserver.setHttpsConfigurator(
-        	    new StrictHttpsConfigurator(SSLContext.getDefault()));
+        	    new StrictHttpsConfigurator(Null.assertNonNull(
+        	            SSLContext.getDefault())));
             sslserver.setExecutor(httpExecutor);
-            setupJsonContext(sslserver.createContext("/"));
-            setupAuthServerContext(sslserver.createContext("/auth"));
+            setupJsonContext(createContext(sslserver, "/"));
+            setupAuthServerContext(createContext(sslserver, "/auth"));
         }
     }
     
     private void setupAuthServerContext(HttpContext ctx) {
         ctx.setAuthenticator(auth);
         ctx.getFilters().add(loopbackFilter);
-        ctx.setHandler(new AuthServer(syncService));
+        ctx.setHandler(new AuthServer(Null.assertNonNull(syncService)));
     }
     
     private void setupJsonContext(HttpContext ctx) {
@@ -116,7 +122,8 @@ final class WebServer {
         }
     }
     
-    static void replyWithInternalError(HttpExchange exchange) throws IOException {
+    static void replyWithInternalError(HttpExchange exchange)
+            throws IOException {
         replyWithInt(exchange, 500);
     }
     
@@ -141,8 +148,10 @@ final class WebServer {
 		LoggerFactory.getLogger(HttpLoggerFilter.class);
 	
 	@Override
-        public void doFilter(HttpExchange exchange, Chain chain)
-                throws IOException {
+        public void doFilter(@Nullable HttpExchange exchange,
+                @Nullable Chain chain) throws IOException {
+	    if (exchange == null || chain == null)
+	        return;
 	    final HttpPrincipal principal = exchange.getPrincipal();
 	    final String user;
             if (principal != null) {
@@ -185,8 +194,10 @@ final class WebServer {
         }
         
         @Override
-        public void doFilter(HttpExchange exchange, Chain chain)
-                throws IOException {
+        public void doFilter(@Nullable HttpExchange exchange,
+                @Nullable Chain chain) throws IOException {
+            if (exchange == null || chain == null)
+                return;
             final InetAddress remoteAddress =
                     exchange.getRemoteAddress().getAddress();
             if (loopback4Address.equals(remoteAddress)
@@ -208,15 +219,18 @@ final class WebServer {
     
     private static final class ClubAuthenticator extends BasicAuthenticator {
 
-        private static final String DEFAULT_USERNAME = Config.getKeyAPIUsername();
-        private static final String DEFAULT_PASSWORD = Config.getKeyAPIPassword();
+        private static final String DEFAULT_USERNAME =
+                Config.getKeyAPIUsername();
+        private static final String DEFAULT_PASSWORD =
+                Config.getKeyAPIPassword();
         
         public ClubAuthenticator(String realm) {
             super(realm);
         }
 
         @Override
-        public boolean checkCredentials(String username, String password) {
+        public boolean checkCredentials(@Nullable String username,
+                @Nullable String password) {
             if (DEFAULT_USERNAME.equals(username)
                     && DEFAULT_PASSWORD.equals(password)) {
                 return true;
@@ -231,7 +245,9 @@ final class WebServer {
         }
 
         @Override
-        public void configure(HttpsParameters params) {
+        public void configure(@Nullable HttpsParameters params) {
+            if (params == null)
+                throw new NullPointerException();
             params.setProtocols(new String[] { "TLSv1", "TLSv1.1" });
             params.setCipherSuites(new String[] {
                     "TLS_DHE_RSA_WITH_AES_128_CBC_SHA" });
@@ -253,10 +269,11 @@ final class WebServer {
             map.put(URLDecoder.decode(split[0], charset),
                     URLDecoder.decode(split[1], charset));
         }
-        return Collections.unmodifiableMap(map);
+        return Null.assertNonNull(Collections.unmodifiableMap(map));
     }
     
-    public static void setContentType(HttpExchange exchange, String contentType) {
+    public static void setContentType(HttpExchange exchange,
+            String contentType) {
         exchange.getResponseHeaders().set("Content-Type",
                 contentType);
     }
@@ -266,7 +283,7 @@ final class WebServer {
         final SimpleDateFormat formatter = new SimpleDateFormat(
                 RFC1123_PATTERN);
         formatter.setTimeZone(TimeZone.getTimeZone("GMT"));
-        return formatter.format(new Date());
+        return Null.assertNonNull(formatter.format(new Date()));
     }
     
     public static void disableCaching(HttpExchange exchange) {

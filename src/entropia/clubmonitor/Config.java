@@ -21,6 +21,8 @@ import java.util.List;
 import java.util.Properties;
 import java.util.regex.Pattern;
 
+import org.eclipse.jdt.annotation.Nullable;
+
 import com.google.common.base.Joiner;
 import com.google.common.net.InetAddresses;
 
@@ -207,7 +209,7 @@ public enum Config {
 	    str.append(String.format("%s = %s", key, value));
 	    str.append(NEWLINE);
 	}
-	return str.toString();
+	return Null.assertNonNull(str.toString());
     }
     
     public static String getConfigTemplate() {
@@ -218,7 +220,7 @@ public enum Config {
             }
             final String key = f.getName();
             final Default def = f.getAnnotation(Default.class);
-            if (def != null && def.value() != null) {
+            if (def != null) {
         	str.append(String.format("%s = %s", key, def.value()));
         	str.append(NEWLINE);
             } else if (!maybeNull(f)) {
@@ -226,16 +228,17 @@ public enum Config {
         	str.append(NEWLINE);
             }
         }
-        return str.toString();
+        return Null.assertNonNull(str.toString());
     }
     
     private static boolean maybeNull(final Field f) {
 	final MaybeNull maybeNull = f.getAnnotation(MaybeNull.class);
-	final MaybeNullIfFalse maybeIff = f.getAnnotation(MaybeNullIfFalse.class);
+	final MaybeNullIfFalse maybeIff = f.getAnnotation(
+	        MaybeNullIfFalse.class);
 	if (maybeNull != null) {
 	    return true;
 	}
-	if (maybeIff != null && maybeIff.value() != null) {
+	if (maybeIff != null) {
 	    boolean b = Boolean.parseBoolean(PROPERTIES.getProperty(
 		    maybeIff.value().toString()));
 	    if (b == false) {
@@ -265,7 +268,7 @@ public enum Config {
 	    if (!f.isEnumConstant()) {
 		continue;
 	    }
-	    final String name = f.getName();
+	    final String name = Null.assertNonNull(f.getName());
 	    final String value = PROPERTIES.getProperty(f.getName());
 	    if (value == null) {
 		if (f.getAnnotation(MaybeNull.class) != null) {
@@ -372,7 +375,8 @@ public enum Config {
     
     public static InetSocketAddress getNetIOAddress() {
 	final InetAddress ip = InetAddresses.forString(
-		PROPERTIES.getProperty(CLUB_MONITOR_NETIO_IPADDRESS.toString()));
+		PROPERTIES.getProperty(
+		        CLUB_MONITOR_NETIO_IPADDRESS.toString()));
 	final int port = Integer.parseInt(
 		PROPERTIES.getProperty(CLUB_MONITOR_NETIO_TCPPORT.toString()));
 	return new InetSocketAddress(ip, port);
@@ -380,7 +384,8 @@ public enum Config {
 
     public static InetSocketAddress getWebServerPort() {
 	return new InetSocketAddress(Integer.parseInt(
-		PROPERTIES.getProperty(CLUB_MONITOR_WEBSERVER_TCPPORT.toString())));
+		PROPERTIES.getProperty(
+		        CLUB_MONITOR_WEBSERVER_TCPPORT.toString())));
     }
     
     public static InetSocketAddress getSecureWebServerPort() {
@@ -396,9 +401,11 @@ public enum Config {
     
     public static InetSocketAddress getMulticastAddress() {
 	return new InetSocketAddress(InetAddresses.forString(
-		PROPERTIES.getProperty(CLUB_MONITOR_MULTICAST_ADDRESS.toString())),
+		PROPERTIES.getProperty(
+		        CLUB_MONITOR_MULTICAST_ADDRESS.toString())),
 		Integer.parseInt(
-			PROPERTIES.getProperty(CLUB_MONITOR_MULTICAST_PORT.toString())));
+			PROPERTIES.getProperty(
+			        CLUB_MONITOR_MULTICAST_PORT.toString())));
     }
     
     public static int getMulticastTTL() {
@@ -417,15 +424,18 @@ public enum Config {
     }
     
     public static String getXMPPHost() {
-	return PROPERTIES.getProperty(CLUB_MONITOR_XMPP_SERVER.toString());
+	return Null.assertNonNull(PROPERTIES.getProperty(
+	        CLUB_MONITOR_XMPP_SERVER.toString()));
     }
 
     public static String getXMPPUsername() {
-	return PROPERTIES.getProperty(CLUB_MONITOR_XMPP_USERNAME.toString());
+	return Null.assertNonNull(PROPERTIES.getProperty(
+	        CLUB_MONITOR_XMPP_USERNAME.toString()));
     }
 
     public static String getXMPPService() {
-	return PROPERTIES.getProperty(CLUB_MONITOR_XMPP_SERVICE.toString());
+	return Null.assertNonNull(PROPERTIES.getProperty(
+	        CLUB_MONITOR_XMPP_SERVICE.toString()));
     }
 
     public static int getXMPPPort() {
@@ -434,20 +444,24 @@ public enum Config {
     }
     
     public static String getXMPPPassword() {
-	return PROPERTIES.getProperty(CLUB_MONITOR_XMPP_PASSWORD.toString());
+	return Null.assertNonNull(PROPERTIES.getProperty(
+	        CLUB_MONITOR_XMPP_PASSWORD.toString()));
     }
 
     public static String getXMPPResource() {
-	return PROPERTIES.getProperty(CLUB_MONITOR_XMPP_RESOURCE.toString());
+	return Null.assertNonNull(PROPERTIES.getProperty(
+	        CLUB_MONITOR_XMPP_RESOURCE.toString()));
     }
 
     public static boolean isXMPPMUCEnabled() {
         return Boolean.parseBoolean(
-                PROPERTIES.getProperty(CLUB_MONITOR_XMPP_MUC_ENABLED.toString()));
+                PROPERTIES.getProperty(
+                        CLUB_MONITOR_XMPP_MUC_ENABLED.toString()));
     }
     
     public static String getXMPPMUC() {
-	return PROPERTIES.getProperty(CLUB_MONITOR_XMPP_MUC.toString());
+	return Null.assertNonNull(PROPERTIES.getProperty(
+	        CLUB_MONITOR_XMPP_MUC.toString()));
     }
     
     public static File getSVNRepo() {
@@ -455,11 +469,13 @@ public enum Config {
     }
 
     public static String getKeyAPIUsername() {
-        return PROPERTIES.getProperty(CLUB_KEY_API_USERNAME.toString());
+        return Null.assertNonNull(PROPERTIES.getProperty(
+                CLUB_KEY_API_USERNAME.toString()));
     }
 
     public static String getKeyAPIPassword() {
-        return PROPERTIES.getProperty(CLUB_KEY_API_PASSWORD.toString());
+        return Null.assertNonNull(PROPERTIES.getProperty(
+                CLUB_KEY_API_PASSWORD.toString()));
     }
     
     public static boolean isSSLEnabled() {
@@ -472,15 +488,18 @@ public enum Config {
     }
     
     public static File getKeyTrustStore() {
-        return new File(PROPERTIES.getProperty(CLUB_KEY_TRUST_STORE.toString()));
+        return new File(PROPERTIES.getProperty(
+                CLUB_KEY_TRUST_STORE.toString()));
     }
     
     public static char[] getKeyStorePw() {
-        return PROPERTIES.getProperty(CLUB_KEY_STORE_PW.toString()).toCharArray();
+        return Null.assertNonNull(PROPERTIES.getProperty(
+                CLUB_KEY_STORE_PW.toString()).toCharArray());
     }
     
     public static boolean isMPDEnabled() {
-        return Boolean.parseBoolean(PROPERTIES.getProperty(MPD_ENABLE.toString()));
+        return Boolean.parseBoolean(PROPERTIES.getProperty(
+                MPD_ENABLE.toString()));
     }
     
     public static InetSocketAddress getMPDAddress() {
@@ -493,18 +512,21 @@ public enum Config {
 	final String property = PROPERTIES.getProperty(
 		CLUB_MONITOR_XMPP_ADMINS.toString());
 	if (property == null) {
-	    return Collections.emptyList();
+	    return Null.assertNonNull(Collections.<String>emptyList());
 	}
-	return Collections.unmodifiableList(Arrays.asList(property.split(",")));
+	return Null.assertNonNull(Collections.unmodifiableList(
+	        Arrays.asList(property.split(","))));
     }
 
     public static boolean isClubBusEnabled() {
-	return Boolean.parseBoolean(PROPERTIES.getProperty(CLUB_BUS_ENABLE.toString()));
+	return Boolean.parseBoolean(PROPERTIES.getProperty(
+	        CLUB_BUS_ENABLE.toString()));
     }
 
-    public static URL getClubBusURL() {
+    public static @Nullable URL getClubBusURL() {
 	try {
-	    final String property = PROPERTIES.getProperty(CLUB_BUS_URL.toString());
+	    final String property = PROPERTIES.getProperty(
+	            CLUB_BUS_URL.toString());
 	    if (property == null) {
 		return null;
 	    }

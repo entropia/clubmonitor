@@ -1,16 +1,19 @@
 package entropia.clubmonitor.types;
 
 import java.math.BigInteger;
+import java.util.Objects;
 import java.util.regex.Pattern;
+
+import org.eclipse.jdt.annotation.Nullable;
+
+import entropia.clubmonitor.Null;
 
 public abstract class Key {
     private static final Pattern PATTERN = Pattern.compile("\\A[A-F0-9]{32}\\z");
     private final String key;
     
-    protected Key(String doorKey) throws DataFormatException {
-        if (doorKey == null) {
-            throw new NullPointerException();
-        }
+    protected Key(@Nullable String doorKey) throws DataFormatException {
+        Objects.requireNonNull(doorKey);
         if (!PATTERN.matcher(doorKey).matches()) {
             throw new DataFormatException();
         }
@@ -19,7 +22,7 @@ public abstract class Key {
 
     @Override
     public String toString() {
-        return key;
+        return Null.assertNonNull(key);
     }
     
     public BigInteger asBigInteger() {
@@ -32,7 +35,7 @@ public abstract class Key {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(@Nullable Object obj) {
         if (this == obj)
             return true;
         if (obj == null)

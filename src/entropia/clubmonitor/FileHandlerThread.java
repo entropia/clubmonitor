@@ -49,8 +49,8 @@ enum FileHandlerThread implements Runnable {
 	    final FileTransferRequest request = queue.takeFirst();
 	    final IncomingFileTransfer fileTransfer = request.accept();
 	    logger.info("starting file transfer from " + fileTransfer.getPeer());
-	    final File tempFile = File.createTempFile(
-	            FileHandlerThread.class.getName(), ".mp3", tempDir);
+	    final File tempFile = Null.assertNonNull(File.createTempFile(
+	            FileHandlerThread.class.getName(), ".mp3", tempDir));
 	    try {
 		copyFileFromJabber(fileTransfer, tempFile);
 		play(tempFile);
@@ -66,7 +66,7 @@ enum FileHandlerThread implements Runnable {
             final File tempFile) throws XMPPException, FileNotFoundException,
             IOException {
 	logger.debug("writing jabber stream to " + tempFile.getPath());
-	try (final InputStream in = first.recieveFile()) {
+	try (final InputStream in = Null.assertNonNull(first.recieveFile())) {
 	    try (final OutputStream out = new FileOutputStream(tempFile)) {
 		copyStream(in, out);
 	    }
@@ -101,7 +101,7 @@ enum FileHandlerThread implements Runnable {
 
     private static String stripTrailingNL(final String str) {
 	if (str.endsWith("\n")) {
-	    return str.substring(0, str.length()-1);
+	    return Null.assertNonNull(str.substring(0, str.length()-1));
 	}
 	return str;
     }
@@ -121,7 +121,7 @@ enum FileHandlerThread implements Runnable {
     private static String slurp(InputStream in) throws IOException {
 	final ByteArrayOutputStream out = new ByteArrayOutputStream();
 	copyStream(in, out);
-	return out.toString();
+	return Null.assertNonNull(out.toString());
     }
 
     @Override

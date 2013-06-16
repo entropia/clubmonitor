@@ -5,6 +5,8 @@ import java.util.concurrent.DelayQueue;
 import java.util.concurrent.Delayed;
 import java.util.concurrent.TimeUnit;
 
+import org.eclipse.jdt.annotation.Nullable;
+
 import com.google.common.base.Charsets;
 
 public enum TriggerPort {
@@ -32,33 +34,35 @@ public enum TriggerPort {
     private TriggerPort(Class<?> clazz, int i, boolean inverted) {
 	this.portNumber = i;
 	this.forClazz = clazz;
-	this.on = String.format("SETPORT %d.%d\r\n", portNumber, 1).getBytes(Charsets.US_ASCII);
-	this.off = String.format("SETPORT %d.%d\r\n", portNumber, 0).getBytes(Charsets.US_ASCII);
+	this.on = String.format("SETPORT %d.%d\r\n", portNumber, 1).getBytes(
+	        Charsets.US_ASCII);
+	this.off = String.format("SETPORT %d.%d\r\n", portNumber, 0).getBytes(
+	        Charsets.US_ASCII);
 	this.inverted = inverted;
 	this.nextCommands = new DelayQueue<>(
 	        Arrays.asList(new Event(getOffCmd(), 0)));
     }
 
     public Class<?> getForClass() {
-	return forClazz;
+	return Null.assertNonNull(forClazz);
     }
     
-    private static byte[] copy(byte[] ts) {
-        return Arrays.copyOf(ts, ts.length);
+    private static byte[] copy(@Nullable byte[] ts) {
+        if (ts == null)
+            return new byte[0];
+        return Null.assertNonNull(Arrays.copyOf(ts, ts.length));
     }
     
     public byte[] getOnCmd() {
-	if (inverted) {
+	if (inverted)
 	    return copy(off);
-	}
 	return copy(on);
     }
     
     public byte[] getOffCmd() {
-	if (inverted) {
-	    return copy(on);
-	}
-	return copy(off);
+        final byte[] bytearray = Null.assertNonNull(
+                inverted ? on : off); 
+	return copy(bytearray);
     }
     
     public void offon(int seconds) {
@@ -89,7 +93,7 @@ public enum TriggerPort {
 	}
     }
 
-    public byte[] getNextCommand() {
+    public @Nullable byte[] getNextCommand() {
 	synchronized (lock) {
 	    Event poll = nextCommands.poll();
 	    return (poll != null) ? poll.nextCommand : null;
@@ -107,22 +111,20 @@ public enum TriggerPort {
 	final long timeout;
 	
 	Event(byte[] nextCommand, long delayNanos) {
-	    if (nextCommand == null) {
-	        throw new NullPointerException();
-	    }
 	    this.nextCommand = nextCommand;
 	    this.timeout = System.nanoTime() + delayNanos;
 	}
 
 	@Override
-	public int compareTo(Delayed o) {
-	    return (int) (getDelay(TimeUnit.NANOSECONDS)
-		    - o.getDelay(TimeUnit.NANOSECONDS));
+	public int compareTo(@Nullable Delayed o) {
+	    return (int) (getDelay(Null.assertNonNull(TimeUnit.NANOSECONDS))
+		    - Null.assertNonNull(o).getDelay(TimeUnit.NANOSECONDS));
 	}
 
 	@Override
-        public long getDelay(TimeUnit unit) {
-	    return unit.convert(timeout - System.nanoTime(), unit);
+        public long getDelay(@Nullable TimeUnit unit) {
+	    return Null.assertNonNull(unit).convert(timeout - System.nanoTime(),
+	            unit);
         }
 
         @Override
@@ -135,7 +137,7 @@ public enum TriggerPort {
         }
 
         @Override
-        public boolean equals(Object obj) {
+        public boolean equals(@Nullable Object obj) {
             if (this == obj)
                 return true;
             if (obj == null)

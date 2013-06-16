@@ -7,6 +7,7 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.Arrays;
 
+import org.eclipse.jdt.annotation.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,11 +31,12 @@ final class HauptRaumNetIOHandler implements Runnable {
 	private final TernaryStatusRegister status;
 	private final boolean inverted;
 	
-	private BINARYPORTS(int i, TernaryStatusRegister status) {
+	private BINARYPORTS(int i, @Nullable TernaryStatusRegister status) {
 	    this(i, status, false);
 	}
 	
-	private BINARYPORTS(int i, TernaryStatusRegister status, boolean inverted) {
+	private BINARYPORTS(int i, @Nullable TernaryStatusRegister status,
+	        boolean inverted) {
 	    if (status == null) {
 		throw new NullPointerException();
 	    }
@@ -102,12 +104,15 @@ final class HauptRaumNetIOHandler implements Runnable {
     }
     
     private void poll() throws Exception {
-	final Socket socket = IOUtils.connectLowLatency(tcpAddress, false);
-	logger.info("connected to " + tcpAddress.toString());
-	TernaryStatusRegister.HW_FEHLER.off();
+        final Socket socket = IOUtils.connectLowLatency(
+                Null.assertNonNull(tcpAddress), false);
 	try {
-	    final InputStream inputStream = socket.getInputStream();
-	    final OutputStream outputStream = socket.getOutputStream();
+	    logger.info("connected to " + tcpAddress.toString());
+	    TernaryStatusRegister.HW_FEHLER.off();
+	    final InputStream inputStream = Null.assertNonNull(
+	            socket.getInputStream());
+	    final OutputStream outputStream = Null.assertNonNull(
+	            socket.getOutputStream());
 	    while (true) {
 		readBinaryPorts(inputStream, outputStream);
 		readADCPorts(inputStream, outputStream);

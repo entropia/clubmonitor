@@ -40,7 +40,8 @@ public class WebClient {
 	}
     }
     
-    public static void post(final HttpURLConnection con, final Map<String,String> params)
+    public static void post(final HttpURLConnection con,
+            final Map<String,String> params)
 	    throws IOException {
 	final String param = encodeParam(params);
 	post(con, param);
@@ -48,7 +49,8 @@ public class WebClient {
     
     public static void post(final URL url, final Map<String,String> params)
 	    throws IOException {
-	final HttpURLConnection con = (HttpURLConnection) url.openConnection();
+	final HttpURLConnection con = Null.assertNonNull(
+	        (HttpURLConnection) url.openConnection());
 	try {
 	    post(con, params);
 	} finally {
@@ -58,7 +60,8 @@ public class WebClient {
     
     public static void post(final URL url, final String param)
 	    throws IOException {
-	final HttpURLConnection con = (HttpURLConnection) url.openConnection();
+	final HttpURLConnection con = Null.assertNonNull(
+	        (HttpURLConnection) url.openConnection());
 	try {
 	    post(con, param);
 	} finally {
@@ -69,7 +72,7 @@ public class WebClient {
     @SuppressWarnings("unused")
     private static String urlencode(final String s)
             throws UnsupportedEncodingException {
-        return URLEncoder.encode(s, Charsets.UTF_8.name());
+        return Null.assertNonNull(URLEncoder.encode(s, Charsets.UTF_8.name()));
     }
     
     public static String buildParams(final String... args) {
@@ -84,7 +87,8 @@ public class WebClient {
             final String value = it.next();
             map.put(key, value);
         }
-        return encodeParam(Collections.unmodifiableMap(map));
+        return encodeParam(Null.assertNonNull(
+                Collections.unmodifiableMap(map)));
     }
     
     public static String encodeParam(final Map<String,String> params) {
@@ -94,7 +98,7 @@ public class WebClient {
             final String v = e.getValue();
             l.add(k + "=" + v);
         }
-        return Joiner.on("&").join(l);
+        return Null.assertNonNull(Joiner.on("&").join(l));
     }
     
     public static URL getURL(final URL url, final String... params)
@@ -106,8 +110,10 @@ public class WebClient {
     public static JsonObject getJsonElement(final URL url) throws IOException {
         final HttpURLConnection c = (HttpURLConnection) url.openConnection();
         try {
-            try (final InputStreamReader in = new InputStreamReader(c.getInputStream())) {
-                return new JsonParser().parse(in).getAsJsonObject();
+            try (final InputStreamReader in = new InputStreamReader(
+                    c.getInputStream())) {
+                return Null.assertNonNull(
+                        new JsonParser().parse(in).getAsJsonObject());
             }
         } finally {
             c.disconnect();

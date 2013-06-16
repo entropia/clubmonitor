@@ -5,7 +5,8 @@ import entropia.clubmonitor.TernaryStatusRegister.RegisterState;
 final class ClubStatusTransition extends PublicOnlyTrigger {
 
     @Override
-    public void trigger(@SuppressWarnings("unused") TernaryStatusRegister changed) {
+    public void trigger(
+            @SuppressWarnings("unused") TernaryStatusRegister changed) {
 	final RegisterState clubOffen =
 		TernaryStatusRegister.CLUB_OFFEN.status();
 	final RegisterState fensterOffenStatus =

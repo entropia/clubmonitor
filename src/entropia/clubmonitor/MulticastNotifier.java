@@ -7,6 +7,7 @@ import java.net.MulticastSocket;
 import java.net.SocketException;
 import java.util.concurrent.TimeUnit;
 
+import org.eclipse.jdt.annotation.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,7 +29,7 @@ final class MulticastNotifier extends PublicOnlyTrigger implements Runnable {
 	}
     }
 
-    private static MulticastSocket initSocket() {
+    private static @Nullable MulticastSocket initSocket() {
 	try {
 	    MulticastSocket socket = new MulticastSocket();
 	    socket.setTimeToLive(Config.getMulticastTTL());

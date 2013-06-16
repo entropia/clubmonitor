@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.Locale;
 
+import org.eclipse.jdt.annotation.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,7 +13,8 @@ public final class ClubMonitor {
     static {
 	Config.loadDefaults();
     }
-    private static final Logger logger = LoggerFactory.getLogger(ClubMonitor.class);
+    private static final Logger logger = LoggerFactory.getLogger(
+            ClubMonitor.class);
     private static Thread xmppThread;
     private static Thread fileHandlerThread;
     private static Thread netioPoller;
@@ -36,7 +38,8 @@ public final class ClubMonitor {
 	TernaryStatusRegister.OVERRIDE_WINDOWS.off();
 	
 	if (Config.isNetIOEnabled()) {
-	    netioPoller = HauptRaumNetIOHandler.startNetIOPoller(SYNC_SERVICE);
+	    netioPoller = HauptRaumNetIOHandler.startNetIOPoller(
+	            Null.assertNonNull(SYNC_SERVICE));
 	}
 	if (Config.isXMPPEnabled()) {
 	    xmppThread = XMPPThread.startXMPPThread();
@@ -48,7 +51,7 @@ public final class ClubMonitor {
 	if (Config.isClubBusEnabled()) {
 	    clubBusTriggerThread = ClubBusTrigger.startClubBusTrigger();
 	}
-	webServer = new WebServer(SYNC_SERVICE);
+	webServer = new WebServer(Null.assertNonNull(SYNC_SERVICE));
 	webServer.startWebServer();
     }
 
@@ -56,8 +59,10 @@ public final class ClubMonitor {
         Thread.setDefaultUncaughtExceptionHandler(
                 new UncaughtExceptionHandler() {
             @Override
-            public void uncaughtException(Thread t, Throwable e) {
-                logger.error(t.toString(), e);
+            public void uncaughtException(@Nullable Thread t,
+                    @Nullable Throwable e) {
+                logger.error(t != null ? t.toString() : "<unkown thread>",
+                        e != null ? e : "<unkown exception>");
             }
         });
     }

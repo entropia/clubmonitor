@@ -8,6 +8,9 @@ import static entropia.clubmonitor.TernaryStatusRegister.OVERRIDE_WINDOWS;
 import static entropia.clubmonitor.TernaryStatusRegister.RegisterState.HIGH;
 import static entropia.clubmonitor.TernaryStatusRegister.RegisterState.LOW;
 
+import java.util.Objects;
+
+import org.eclipse.jdt.annotation.Nullable;
 import org.jivesoftware.smack.packet.Presence.Mode;
 
 import entropia.clubmonitor.TernaryStatusRegister.RegisterState;
@@ -31,32 +34,32 @@ final class XMPPNotifier extends PublicOnlyTrigger {
 	private final boolean toMuc;
 	private final boolean toAll;
 	private final Mode mode;
-	private StatusChange(String msg, Mode mode, boolean toMuc,
+	private StatusChange(String msg, @Nullable Mode mode, boolean toMuc,
 		boolean toAll) {
-	    this.mode = mode;
+	    this.mode = Objects.requireNonNull(mode);
 	    this.msg = msg;
 	    this.toMuc = toMuc;
 	    this.toAll = toAll;
 	}
 	
 	public String getMessage() {
-	    return msg;
+	    return Null.assertNonNull(msg);
 	}
 	
 	public boolean deliverToMuc() {
-	    return toMuc;
+	    return Null.assertNonNull(toMuc);
 	}
 	
 	public boolean deliverToAll() {
-	    return toAll;
+	    return Null.assertNonNull(toAll);
 	}
 	
 	public Mode isOnline() {
-	    return mode;
+	    return Null.assertNonNull(mode);
 	}
 
 	public Mode getMode() {
-	    return mode;
+	    return Null.assertNonNull(mode);
         }
     }
 
@@ -154,7 +157,8 @@ final class XMPPNotifier extends PublicOnlyTrigger {
 	throw new IllegalStateException("illegal state");
     }
 
-    private static void send(StatusChange status) {
-	XMPPThread.INSTANCE.status.addLast(status);
+    private static void send(@Nullable StatusChange status) {
+        if (status != null)
+            XMPPThread.INSTANCE.status.addLast(status);
     }
 }

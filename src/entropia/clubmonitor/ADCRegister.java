@@ -27,7 +27,7 @@ public enum ADCRegister {
 	synchronized (lock) {
 	    final Map<String, Object> map = new TreeMap<>();
 	    map.put("val", value);
-	    return Collections.unmodifiableMap(map);
+	    return Null.assertNonNull(Collections.unmodifiableMap(map));
 	}
     }
 }

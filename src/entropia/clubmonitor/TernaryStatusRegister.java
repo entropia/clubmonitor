@@ -56,7 +56,7 @@ public enum TernaryStatusRegister {
 		    ? true : false; 
 	    status.put("lastChange", lastChangeTimestampSeconds);
 	    status.put("status", boolStatus);
-	    return Collections.unmodifiableMap(status);
+	    return Null.assertNonNull(Collections.unmodifiableMap(status));
 	}
     }
     
@@ -93,7 +93,7 @@ public enum TernaryStatusRegister {
 
     public RegisterState status() {
 	synchronized (lock) {
-	    return state;
+	    return Null.assertNonNull(state);
 	}
     }
 

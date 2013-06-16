@@ -14,5 +14,6 @@
 	<classpathentry kind="lib" path="lib/svnkit-1.7.9.jar"/>
 	<classpathentry kind="lib" path="lib.test/hamcrest-core-1.3.jar"/>
 	<classpathentry kind="lib" path="lib.test/junit-4.11.jar"/>
+	<classpathentry kind="lib" path="lib/org.eclipse.jdt.annotation_1.0.1.v20130320-2006.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

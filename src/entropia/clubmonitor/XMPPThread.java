@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.TimeUnit;
 
+import org.eclipse.jdt.annotation.Nullable;
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.ChatManagerListener;
 import org.jivesoftware.smack.Connection;
@@ -148,6 +149,8 @@ enum XMPPThread implements Runnable {
 	logAdmins();
 	while (true) {
 	    final XMPPNotifier.StatusChange s = status.takeFirst();
+	    if (s == null)
+	        continue;
 	    setPresence(connection, s);
 	    if (muc != null && s.deliverToMuc()) {
 		notifyMuc(muc, s);
@@ -158,13 +161,10 @@ enum XMPPThread implements Runnable {
 	}
     }
 
-    private static MultiUserChat joinMuc(Connection connection) {
+    private static @Nullable MultiUserChat joinMuc(Connection connection) {
 	if (Config.isXMPPMUCEnabled()) {
 	    try {
 		final String xmppmuc = Config.getXMPPMUC();
-		if (xmppmuc == null) {
-		    throw new IllegalArgumentException("no muc name specified");
-		}
 		final MultiUserChat multiUserChat = new MultiUserChat(connection,
 			xmppmuc);
 		multiUserChat.join(Config.getXMPPUsername());
@@ -199,8 +199,11 @@ enum XMPPThread implements Runnable {
     private static void addFileTransferManager(FileTransferManager fileManager) {
 	fileManager.addFileTransferListener(new FileTransferListener() {
 	    @Override
-	    public void fileTransferRequest(FileTransferRequest request) {
+	    public void fileTransferRequest(
+	            @Nullable FileTransferRequest request) {
 		try {
+		    if (request == null)
+		        return;
 		    logger.info("file event from " + request.getRequestor());
 		    FileHandlerThread.add(request);
 		} catch (Exception e) {
@@ -213,8 +216,10 @@ enum XMPPThread implements Runnable {
     private static void addMucResponder(final MultiUserChat muc) {
 	muc.addMessageListener(new PacketListener() {
 	    @Override
-	    public void processPacket(Packet packet) {
+	    public void processPacket(@Nullable Packet packet) {
 		try {
+		    if (packet == null)
+		        return;
 		    if (packet instanceof Message) {
 			final Message msg = (Message) packet;
 			final String body = msg.getBody();
@@ -236,35 +241,43 @@ enum XMPPThread implements Runnable {
     private static void addChatResponder(final Connection connection) {
         connection.getChatManager().addChatListener(new ChatManagerListener() {
             @Override
-            public void chatCreated(Chat chat, boolean createdLocally) {
-                if (createdLocally) {
+            public void chatCreated(@Nullable Chat chat, boolean createdLocally) {
+                if (chat == null || createdLocally)
                     return;
-                }
                 chat.addMessageListener(new MessageListener() {
                     @Override
-                    public void processMessage(Chat chat2, Message message) {
+                    public void processMessage(@Nullable Chat chat2,
+                            @Nullable Message message) {
                         try {
+                            if (chat2 == null || message == null)
+                                return;
                             if (message.getError() != null) {
                         	logger.warn(message.getError().toString());
                         	return;
                             }
                             final String from = message.getFrom();
-			    if (!checkSubscribed(connection, from)) {
+			    if (from == null ||
+			            !checkSubscribed(connection, from)) {
 				return;
 			    }
 			    final boolean isAdmin = checkAdmin(from);
                             final String msg = message.getBody();
 			    if ("status".equals(msg)) {
-                                chat2.sendMessage("\n" + StatusServer.oldjson());
+                                chat2.sendMessage("\n" +
+                                        StatusServer.oldjson());
                             }
 			    if ("mpd-next".equals(msg)) {
-                        	MpdNotifier.submitEvent(Status.NEXT);
+                        	MpdNotifier.submitEvent(Null.assertNonNull(
+                        	        Status.NEXT));
                             } else if ("mpd-previous".equals(msg)) {
-                        	MpdNotifier.submitEvent(Status.PREVIOUS);
+                        	MpdNotifier.submitEvent(Null.assertNonNull(
+                        	        Status.PREVIOUS));
                             } else if ("mpd-pause".equals(msg)) {
-                        	MpdNotifier.submitEvent(Status.PAUSE);
+                        	MpdNotifier.submitEvent(Null.assertNonNull(
+                        	        Status.PAUSE));
                             } else if ("mpd-unpause".equals(msg)) {
-                        	MpdNotifier.submitEvent(Status.UNPAUSE);
+                        	MpdNotifier.submitEvent(Null.assertNonNull(
+                        	        Status.UNPAUSE));
                             } else if (isAdmin && "ignore-windows".equals(msg)) {
                         	TernaryStatusRegister.OVERRIDE_WINDOWS.on();
                         	chat2.sendMessage("ok");
@@ -301,12 +314,14 @@ enum XMPPThread implements Runnable {
 	    final String newUser = user.substring(0, idxSlash);
 	    status = connection.getRoster().contains(newUser);
 	}
-	logger.info(String.format("subscribed status of user %s is %b", user, status));
+	logger.info(String.format("subscribed status of user %s is %b",
+	        user, status));
 	return status;
     }
     
     private static void deliverToAll(Connection connection, StatusChange s) {
-	final Collection<RosterEntry> entries = connection.getRoster().getEntries();
+	final Collection<RosterEntry> entries =
+	        connection.getRoster().getEntries();
 	for (RosterEntry e : entries) {
 	    String user = e.getUser();
 	    final Message message = new Message(user);

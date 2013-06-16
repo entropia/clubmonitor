@@ -40,7 +40,8 @@ public class ClubBusTrigger extends PublicOnlyTrigger implements Runnable {
     
     private static void notifyBus() throws IOException, InterruptedException {
 	final Status poll = queue.take();
-	final HttpURLConnection con = (HttpURLConnection) CLUB_BUS_TRIGGER_URL.openConnection();
+	final HttpURLConnection con = Null.assertNonNull(
+	        (HttpURLConnection) CLUB_BUS_TRIGGER_URL.openConnection());
 	try {
 	    switch (poll) {
 	    case POWER_DOWN:

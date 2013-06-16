@@ -25,18 +25,21 @@ final class SSLConfig {
     private static TrustManager[] setupTrustManager() throws Exception {
         TrustManagerFactory tmFactory = TrustManagerFactory.getInstance("PKIX");
         tmFactory.init(getCertsStore(Config.getKeyTrustStore()));
-        return tmFactory.getTrustManagers();        
+        return Null.assertNonNull(tmFactory.getTrustManagers());        
     }
 
     private static KeyManager[] setupKeyManager() throws Exception {
-        final KeyManagerFactory kmFactory = KeyManagerFactory.getInstance("SunX509");
-        kmFactory.init(getCertsStore(Config.getKeyKeyStore()), Config.getKeyStorePw());
-        return kmFactory.getKeyManagers();
+        final KeyManagerFactory kmFactory = KeyManagerFactory.getInstance(
+                "SunX509");
+        kmFactory.init(getCertsStore(Config.getKeyKeyStore()),
+                Config.getKeyStorePw());
+        return Null.assertNonNull(kmFactory.getKeyManagers());
     }
 
     private static KeyStore getCertsStore(File keyStorePath) throws Exception {
         final KeyStore keyStore = KeyStore.getInstance("JCEKS");
-        try (final FileInputStream keyStream = new FileInputStream(keyStorePath)) {
+        try (final FileInputStream keyStream = new FileInputStream(
+                keyStorePath)) {
             keyStore.load(keyStream, Config.getKeyStorePw());
         }
         return keyStore;

@@ -15,6 +15,7 @@ import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
+import org.eclipse.jdt.annotation.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tmatesoft.svn.core.SVNException;
@@ -36,8 +37,9 @@ public final class ClubKey {
     private final static class NoResourceResolver implements LSResourceResolver {
         @SuppressWarnings("unused")
         @Override
-        public LSInput resolveResource(String type, String namespaceURI,
-                String publicId, String systemId, String baseURI) {
+        public @Nullable LSInput resolveResource(@Nullable String type,
+                @Nullable String namespaceURI, @Nullable String publicId,
+                @Nullable String systemId, @Nullable String baseURI) {
             throw new RuntimeException();
         }
     }
@@ -47,7 +49,8 @@ public final class ClubKey {
     static {
         try {
             final URL schemaFile = ClubKey.class.getResource("clubkey.xsd");
-            final SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+            final SchemaFactory factory = SchemaFactory.newInstance(
+                    XMLConstants.W3C_XML_SCHEMA_NS_URI);
             factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
             factory.setResourceResolver(NO_RESOURCE_RESOLVER);
             schema = factory.newSchema(schemaFile);
@@ -73,7 +76,7 @@ public final class ClubKey {
         return unmarshaller;
     }
     
-    public static Card validateAndGetKey(final Uid uid) {
+    public static @Nullable Card validateAndGetKey(final Uid uid) {
         try {
             return _validateAndGetKey(uid);
         } catch (Exception e) {
@@ -82,8 +85,8 @@ public final class ClubKey {
         }
     }
 
-    private static Card _validateAndGetKey(final Uid uid) throws JAXBException,
-	    SVNException, IOException {
+    private static @Nullable Card _validateAndGetKey(final Uid uid)
+            throws JAXBException, SVNException, IOException {
 	final Unmarshaller unmarshaller = createUnmarshaller();
 	final String xmlContent = svn.getFileContent(uid);
 	final StreamSource source = new StreamSource(new StringReader(xmlContent));

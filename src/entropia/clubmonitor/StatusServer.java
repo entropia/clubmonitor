@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
 
+import org.eclipse.jdt.annotation.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,7 +39,9 @@ final class StatusServer implements HttpHandler {
     };
     
     @Override
-    public void handle(HttpExchange exchange) throws IOException {
+    public void handle(@Nullable HttpExchange exchange) throws IOException {
+        if (exchange == null)
+            return;
         try {
             // check request
             if (!"GET".equals(exchange.getRequestMethod())) {
@@ -58,7 +61,8 @@ final class StatusServer implements HttpHandler {
             setContentType(exchange, "application/json; charset=UTF-8");
             disableCaching(exchange);
             exchange.sendResponseHeaders(200, bytes.length);
-            try (final OutputStream responseStream = exchange.getResponseBody()) {
+            try (final OutputStream responseStream =
+                    exchange.getResponseBody()) {
                 responseStream.write(bytes);
             }
         } catch (Exception e) {
@@ -74,21 +78,24 @@ final class StatusServer implements HttpHandler {
         map.put("raintropia", -1);
         map.put("generation", RandomUtils.generation());
         map.put("hardware_fehler",
-                TernaryStatusRegister.HW_FEHLER.status() == RegisterState.HIGH ? true : false);
+                TernaryStatusRegister.HW_FEHLER.status() == RegisterState.HIGH ?
+                        true : false);
         map.put("club_offen",
-                TernaryStatusRegister.CLUB_OFFEN.status() == RegisterState.HIGH ? true : false);
+                TernaryStatusRegister.CLUB_OFFEN.status() == RegisterState.HIGH ?
+                        true : false);
         final String timestamp = timestampFormat.format(new Date(
                 TimeUnit.SECONDS.toMillis(TernaryStatusRegister.lastEvent())));
         map.put("last_event", timestamp);
         map.put("fenster_offen",
-                TernaryStatusRegister.FENSTER_OFFEN.status() == RegisterState.HIGH ? true : false);
+                TernaryStatusRegister.FENSTER_OFFEN.status() == RegisterState.HIGH ?
+                        true : false);
         return gson.get().toJson(map) + "\n";
     }
     
     private static Gson newGson() {
-        return new GsonBuilder().disableHtmlEscaping()
+        return Null.assertNonNull(new GsonBuilder().disableHtmlEscaping()
         // .generateNonExecutableJson()
-                .serializeNulls().setPrettyPrinting().create();
+                .serializeNulls().setPrettyPrinting().create());
     }
 
     public static String json() {

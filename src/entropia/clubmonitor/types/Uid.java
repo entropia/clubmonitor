@@ -1,15 +1,18 @@
 package entropia.clubmonitor.types;
 
 import java.math.BigInteger;
+import java.util.Objects;
 import java.util.regex.Pattern;
+
+import org.eclipse.jdt.annotation.Nullable;
+
+import entropia.clubmonitor.Null;
 
 public final class Uid {
     private static final Pattern pattern = Pattern.compile("\\A[A-F0-9]{14}\\z");
     private final String uid;
-    public Uid(String uid) throws DataFormatException {
-        if (uid == null) {
-            throw new NullPointerException();
-        }
+    public Uid(@Nullable String uid) throws DataFormatException {
+        Objects.requireNonNull(uid);
         if (!pattern.matcher(uid).matches()) {
             throw new DataFormatException();
         }
@@ -18,7 +21,7 @@ public final class Uid {
     
     @Override
     public String toString() {
-        return uid;
+        return Null.assertNonNull(uid);
     }
     
     public BigInteger asBigInteger() {
@@ -31,7 +34,7 @@ public final class Uid {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(@Nullable Object obj) {
         if (this == obj)
             return true;
         if (obj == null)

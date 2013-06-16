@@ -11,26 +11,24 @@ import org.tmatesoft.svn.core.io.SVNRepositoryFactory;
 
 import com.google.common.base.Charsets;
 
+import entropia.clubmonitor.Null;
 import entropia.clubmonitor.types.Uid;
 
 public final class SubversionFileProvider {
     private final SVNRepository repo;
     
     public SubversionFileProvider(File baseDir) throws SVNException {
-        if (baseDir == null || !baseDir.isDirectory()) {
+        if (!baseDir.isDirectory()) {
             throw new IllegalArgumentException();
         }
         this.repo = SVNRepositoryFactory.create(SVNURL.fromFile(baseDir));
     }
     
     synchronized String getFileContent(Uid uid) throws SVNException, IOException {
-        if (uid == null) {
-            throw new NullPointerException();
-        }
         final String xmlFile = uid.toString() + ".xml";
         try (final ByteArrayOutputStream out = new ByteArrayOutputStream()) {
             repo.getFile(xmlFile, SVNRepository.INVALID_REVISION, null, out);
-            return out.toString(Charsets.UTF_8.name());
+            return Null.assertNonNull(out.toString(Charsets.UTF_8.name()));
         }
     }
     
