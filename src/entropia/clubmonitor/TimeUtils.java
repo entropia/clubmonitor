@@ -4,7 +4,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public final class TimeUtils {
+final class TimeUtils {
     private TimeUtils() {}
     public static final ScheduledExecutorService scheduler =
 	    Executors.newScheduledThreadPool(2);

@@ -53,13 +53,13 @@ public enum TriggerPort {
         return Null.assertNonNull(Arrays.copyOf(ts, ts.length));
     }
     
-    public byte[] getOnCmd() {
+    byte[] getOnCmd() {
         if (inverted)
             return copy(off);
         return copy(on);
     }
     
-    public byte[] getOffCmd() {
+    byte[] getOffCmd() {
         if (inverted)
             return copy(on);
         return copy(off);
@@ -150,13 +150,7 @@ public enum TriggerPort {
             if (getClass() != obj.getClass())
                 return false;
             final Event other = (Event) obj;
-            if (!Arrays.equals(nextCommand, other.nextCommand)) {
-                return false;
-            }
-            if (timeout != other.timeout) {
-                return false;
-            }
-            return true;
+            return Arrays.equals(nextCommand, other.nextCommand) && timeout == other.timeout;
         }
     }
 }

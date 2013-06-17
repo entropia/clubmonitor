@@ -7,7 +7,7 @@ import java.net.Socket;
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
-public final class IOUtils {
+final class IOUtils {
     private IOUtils() {}
 
     private static final int IPTOS_LOWDELAY = 0x10;
@@ -47,7 +47,7 @@ public final class IOUtils {
 	}
     }
 
-    static boolean asciiIsDigit(int read) {
+    private static boolean asciiIsDigit(int read) {
 	return 48 <= read && read <= 57;
     }
     

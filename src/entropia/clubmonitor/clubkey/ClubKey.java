@@ -28,7 +28,7 @@ import entropia.clubmonitor.xml.clubkey.Card;
 
 public final class ClubKey {
     private ClubKey() {}
-    private static Logger logger = LoggerFactory.getLogger(ClubKey.class);
+    private static final Logger logger = LoggerFactory.getLogger(ClubKey.class);
     
     private static final Schema schema;
     private static final SubversionFileProvider svn;
@@ -107,7 +107,7 @@ public final class ClubKey {
 
         boolean allow = true;
         if (notbefore != null) {
-            allow &= now.after(notbefore.toGregorianCalendar().getTime());
+            allow = now.after(notbefore.toGregorianCalendar().getTime());
         }
         if (notafter != null) {
             allow &=  now.before(notafter.toGregorianCalendar().getTime());

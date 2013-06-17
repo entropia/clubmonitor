@@ -63,8 +63,7 @@ enum FileHandlerThread implements Runnable {
     }
 
     private static void copyFileFromJabber(IncomingFileTransfer first,
-            final File tempFile) throws XMPPException, FileNotFoundException,
-            IOException {
+            final File tempFile) throws XMPPException, IOException {
 	logger.debug("writing jabber stream to " + tempFile.getPath());
 	try (final InputStream in = Null.assertNonNull(first.recieveFile())) {
 	    try (final OutputStream out = new FileOutputStream(tempFile)) {

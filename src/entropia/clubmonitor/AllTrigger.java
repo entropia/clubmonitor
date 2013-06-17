@@ -1,7 +1,7 @@
 package entropia.clubmonitor;
 
 public abstract class AllTrigger extends Trigger {
-    public AllTrigger() {
+    protected AllTrigger() {
         super(true);
     }
 }

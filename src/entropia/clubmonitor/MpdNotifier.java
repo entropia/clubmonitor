@@ -65,7 +65,7 @@ final class MpdNotifier extends PublicOnlyTrigger implements Runnable {
 
     private static final long RETRY_TIMEOUT = TimeUnit.SECONDS.toMillis(5);
     
-    private static final void checkHeader(BufferedReader in)
+    private static void checkHeader(BufferedReader in)
             throws IOException {
         final String header = in.readLine();
         if (!HEADER_PATTERN.matcher(header).matches()) {
@@ -75,7 +75,7 @@ final class MpdNotifier extends PublicOnlyTrigger implements Runnable {
         logger.info("connected to mpd");
     }
     
-    private static final void checkConnection(BufferedReader in,
+    private static void checkConnection(BufferedReader in,
             BufferedWriter out) throws IOException {
         out.write("ping\n");
         out.flush();
@@ -117,7 +117,6 @@ final class MpdNotifier extends PublicOnlyTrigger implements Runnable {
                 	    name, RETRY_TIMEOUT), e);
                     Thread.sleep(RETRY_TIMEOUT);
                     logger.warn(name + " is ready again for sending commands.");
-                    continue;
                 } finally {
                     socket.close();
                 }
@@ -149,7 +148,6 @@ final class MpdNotifier extends PublicOnlyTrigger implements Runnable {
                 && register.status() == RegisterState.HIGH) {
             logger.info("unpause mpd");
             queue.add(Status.UNPAUSE);
-            return;
         }
     }
 

@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 import com.google.common.base.Charsets;
 
 final class MulticastNotifier extends PublicOnlyTrigger implements Runnable {
-    private static Logger logger =
+    private static final Logger logger =
 	    LoggerFactory.getLogger(MulticastNotifier.class);
     
     private final MulticastSocket socket;
@@ -59,7 +59,7 @@ final class MulticastNotifier extends PublicOnlyTrigger implements Runnable {
     }
 
 
-    private void timedTrigger() throws SocketException, IOException {
+    private void timedTrigger() throws IOException {
 	synchronized (MulticastNotifier.class) {
 	    if (socket == null) {
 		return;

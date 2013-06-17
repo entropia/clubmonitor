@@ -135,7 +135,7 @@ enum XMPPThread implements Runnable {
 	}
     }
 
-    public LinkedBlockingDeque<XMPPNotifier.StatusChange> status =
+    public final LinkedBlockingDeque<XMPPNotifier.StatusChange> status =
 	    new LinkedBlockingDeque<>();
     
     private void process(Connection connection)
@@ -169,9 +169,8 @@ enum XMPPThread implements Runnable {
 			xmppmuc);
 		multiUserChat.join(Config.getXMPPUsername());
 		logger.debug("joined " + xmppmuc);
-		final MultiUserChat muc = multiUserChat;
-		addMucResponder(muc);
-		return muc;
+		addMucResponder(multiUserChat);
+		return multiUserChat;
 	    } catch (final XMPPException e) {
 		logger.error("error joining muc: " + Config.getXMPPMUC(), e);
 	    }

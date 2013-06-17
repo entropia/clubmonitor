@@ -35,7 +35,7 @@ import com.sun.net.httpserver.HttpsServer;
 import entropia.clubmonitor.types.DataFormatException;
 
 final class WebServer {
-    private static Logger serverLogger =
+    private static final Logger serverLogger =
             LoggerFactory.getLogger(WebServer.class);
     private HttpServer server;
     private HttpsServer sslserver;
@@ -127,7 +127,7 @@ final class WebServer {
         replyWithInt(exchange, 500);
     }
     
-    static void replyWithForbidden(HttpExchange exchange) throws IOException {
+    private static void replyWithForbidden(HttpExchange exchange) throws IOException {
         replyWithInt(exchange, 403);
     }
     
@@ -144,7 +144,7 @@ final class WebServer {
     }
     
     private static final class HttpLoggerFilter extends Filter {
-	private static Logger logger =
+	private static final Logger logger =
 		LoggerFactory.getLogger(HttpLoggerFilter.class);
 	
 	@Override
@@ -231,11 +231,8 @@ final class WebServer {
         @Override
         public boolean checkCredentials(@Nullable String username,
                 @Nullable String password) {
-            if (DEFAULT_USERNAME.equals(username)
-                    && DEFAULT_PASSWORD.equals(password)) {
-                return true;
-            }
-            return false;
+            return DEFAULT_USERNAME.equals(username)
+                    && DEFAULT_PASSWORD.equals(password);
         }
     }
     
@@ -278,8 +275,8 @@ final class WebServer {
                 contentType);
     }
     
-    private static String RFC1123_PATTERN = "EEE, dd MMM yyyy HH:mm:ss 'GMT'";
-    public static String getHttpTimestamp() {
+    private static final String RFC1123_PATTERN = "EEE, dd MMM yyyy HH:mm:ss 'GMT'";
+    private static String getHttpTimestamp() {
         final SimpleDateFormat formatter = new SimpleDateFormat(
                 RFC1123_PATTERN);
         formatter.setTimeZone(TimeZone.getTimeZone("GMT"));

@@ -4,9 +4,9 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Random;
 
-public final class RandomUtils {
+final class RandomUtils {
     private RandomUtils() {}
-    public static final Random random;
+    private static final Random random;
     static {
 	try {
 	    random = SecureRandom.getInstance("SHA1PRNG");

@@ -1,7 +1,7 @@
 package entropia.clubmonitor;
 
-public abstract class PublicOnlyTrigger extends Trigger {
-    public PublicOnlyTrigger() {
+abstract class PublicOnlyTrigger extends Trigger {
+    PublicOnlyTrigger() {
         super(false);
     }
 }

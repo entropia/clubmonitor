@@ -169,6 +169,8 @@ public enum Config {
     private @interface URLTest {
 	/* EMPTY */
     }
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.FIELD)
     private @interface RegexTest {
         String value();
     }
@@ -241,7 +243,7 @@ public enum Config {
 	if (maybeIff != null) {
 	    boolean b = Boolean.parseBoolean(PROPERTIES.getProperty(
 		    maybeIff.value().toString()));
-	    if (b == false) {
+	    if (!b) {
 		return true;
 	    }
 	}
@@ -280,7 +282,7 @@ public enum Config {
 		if (annotation != null) {
 		    boolean b = Boolean.parseBoolean(PROPERTIES
 			    .getProperty(annotation.value().toString()));
-		    if (b != false) {
+		    if (b) {
 			errConfigs.add(name);
 		    }
 		    continue;

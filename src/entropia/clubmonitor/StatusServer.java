@@ -29,9 +29,9 @@ import com.sun.net.httpserver.HttpHandler;
 import entropia.clubmonitor.TernaryStatusRegister.RegisterState;
 
 final class StatusServer implements HttpHandler {
-    private static Logger logger = LoggerFactory.getLogger(StatusServer.class);
+    private static final Logger logger = LoggerFactory.getLogger(StatusServer.class);
     
-    private static ThreadLocal<Gson> gson = new ThreadLocal<Gson>() {
+    private static final ThreadLocal<Gson> gson = new ThreadLocal<Gson>() {
         @Override
         protected Gson initialValue() {
             return StatusServer.newGson();
@@ -78,17 +78,14 @@ final class StatusServer implements HttpHandler {
         map.put("raintropia", -1);
         map.put("generation", RandomUtils.generation());
         map.put("hardware_fehler",
-                TernaryStatusRegister.HW_FEHLER.status() == RegisterState.HIGH ?
-                        true : false);
+                TernaryStatusRegister.HW_FEHLER.status() == RegisterState.HIGH);
         map.put("club_offen",
-                TernaryStatusRegister.CLUB_OFFEN.status() == RegisterState.HIGH ?
-                        true : false);
+                TernaryStatusRegister.CLUB_OFFEN.status() == RegisterState.HIGH);
         final String timestamp = timestampFormat.format(new Date(
                 TimeUnit.SECONDS.toMillis(TernaryStatusRegister.lastEvent())));
         map.put("last_event", timestamp);
         map.put("fenster_offen",
-                TernaryStatusRegister.FENSTER_OFFEN.status() == RegisterState.HIGH ?
-                        true : false);
+                TernaryStatusRegister.FENSTER_OFFEN.status() == RegisterState.HIGH);
         return gson.get().toJson(map) + "\n";
     }
     

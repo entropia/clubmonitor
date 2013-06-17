@@ -24,7 +24,7 @@ public final class ClubMonitor {
     
     private static final SyncService SYNC_SERVICE = new SyncService();
     
-    public static void start() throws Exception {
+    private static void start() throws Exception {
 	Config.startupCheck();
 	setupPerThreadExceptionHandler();
 	if (Config.isSSLEnabled()) {

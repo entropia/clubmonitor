@@ -15,7 +15,7 @@ public abstract class Trigger {
     private static final Logger logger = LoggerFactory.getLogger(Trigger.class);
     
     
-    public final static Collection<Trigger> trigger;
+    private final static Collection<Trigger> trigger;
     static {
 	final Collection<Trigger> c = new LinkedList<>(Arrays.asList(
 	            new ClubKeyTransition(),
@@ -31,7 +31,7 @@ public abstract class Trigger {
     
     private final boolean handleNonPublic;
     
-    public Trigger(boolean handleNonPublic) {
+    Trigger(boolean handleNonPublic) {
         this.handleNonPublic = handleNonPublic;
     }
     
@@ -51,11 +51,10 @@ public abstract class Trigger {
         }
     }
     
-    protected static void log(TernaryStatusRegister register) {
+    private static void log(TernaryStatusRegister register) {
         logger.info(String.format("%s changed to %s", register,
                 register.status()));
     }
     
-    public abstract void trigger(TernaryStatusRegister register)
-            throws IOException;
+    protected abstract void trigger(TernaryStatusRegister register);
 }

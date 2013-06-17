@@ -42,9 +42,6 @@ public final class Uid {
         if (getClass() != obj.getClass())
             return false;
         final Uid other = (Uid) obj;
-        if (!uid.equals(other.uid)) {
-            return false;
-        }
-        return true;
+        return uid.equals(other.uid);
     }
 }

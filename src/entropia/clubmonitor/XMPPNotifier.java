@@ -109,7 +109,7 @@ final class XMPPNotifier extends PublicOnlyTrigger {
 		send(StatusChange.FEHLER_ON);
 	    } else if (changed.status() == LOW) {
 		send(StatusChange.FEHLER_OFF);
-		recover(changed);
+		recover();
 	    }
 	    return;
 	case CARDREADER_KAPUTT:
@@ -117,7 +117,7 @@ final class XMPPNotifier extends PublicOnlyTrigger {
 		send(StatusChange.FEHLER_SCHLOSS_ON);
 	    } else if (changed.status() == LOW) {
 		send(StatusChange.FEHLER_SCHLOSS_OFF);
-		recover(changed);
+		recover();
 	    }
 	    return;
 	default:
@@ -126,8 +126,7 @@ final class XMPPNotifier extends PublicOnlyTrigger {
 	}
     }
 
-    private static void recover(
-            @SuppressWarnings("unused") final TernaryStatusRegister changed) {
+    private static void recover() {
 	if (HW_FEHLER.status() == HIGH) {
 	    send(StatusChange.FEHLER_ON);
 	    return;

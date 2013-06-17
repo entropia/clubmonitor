@@ -20,7 +20,7 @@ public final class ClubKeyTransition extends AllTrigger {
         TriggerPort.TUER_OEFFNEN.onoff(1);
     }
     
-    public static void closeDoor() {
+    private static void closeDoor() {
         TriggerPort.TUER_SCHLIESSEN.onoff(1);	
     }
 }

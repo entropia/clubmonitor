@@ -40,8 +40,8 @@ public class WebClient {
 	}
     }
     
-    public static void post(final HttpURLConnection con,
-            final Map<String,String> params)
+    private static void post(final HttpURLConnection con,
+                             final Map<String, String> params)
 	    throws IOException {
 	final String param = encodeParam(params);
 	post(con, param);
@@ -75,7 +75,7 @@ public class WebClient {
         return Null.assertNonNull(URLEncoder.encode(s, Charsets.UTF_8.name()));
     }
     
-    public static String buildParams(final String... args) {
+    private static String buildParams(final String... args) {
         final Map<String,String> map = new HashMap<>(args.length / 2);
         final List<String> l = Arrays.asList(args);
         final Iterator<String> it = l.iterator();
@@ -91,7 +91,7 @@ public class WebClient {
                 Collections.unmodifiableMap(map)));
     }
     
-    public static String encodeParam(final Map<String,String> params) {
+    private static String encodeParam(final Map<String, String> params) {
         final List<String> l = new ArrayList<>(params.size());
         for (final Map.Entry<String, String> e : params.entrySet()) {
             final String k = e.getKey();

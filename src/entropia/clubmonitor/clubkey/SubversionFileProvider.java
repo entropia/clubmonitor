@@ -14,7 +14,7 @@ import com.google.common.base.Charsets;
 import entropia.clubmonitor.Null;
 import entropia.clubmonitor.types.Uid;
 
-public final class SubversionFileProvider {
+final class SubversionFileProvider {
     private final SVNRepository repo;
     
     public SubversionFileProvider(File baseDir) throws SVNException {

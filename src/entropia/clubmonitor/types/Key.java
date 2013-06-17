@@ -12,7 +12,7 @@ public abstract class Key {
     private static final Pattern PATTERN = Pattern.compile("\\A[A-F0-9]{32}\\z");
     private final String key;
     
-    protected Key(@Nullable String doorKey) throws DataFormatException {
+    Key(@Nullable String doorKey) throws DataFormatException {
         Objects.requireNonNull(doorKey);
         if (!PATTERN.matcher(doorKey).matches()) {
             throw new DataFormatException();
@@ -43,9 +43,6 @@ public abstract class Key {
         if (getClass() != obj.getClass())
             return false;
         final Key other = (Key) obj;
-        if (!key.equals(other.key)) {
-            return false;
-        }
-        return true;
+        return key.equals(other.key);
     }
 }
