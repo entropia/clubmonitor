@@ -54,6 +54,8 @@ final class StatusServer implements HttpHandler {
                 bytes = oldjson().getBytes(Charsets.UTF_8);
             } else if ("/json".equals(exchange.getRequestURI().getPath())) {
                 bytes = json().getBytes(Charsets.UTF_8);
+            } else if ("/spaceapi".equals(exchange.getRequestURI().getPath())) {
+                bytes = spaceapi().getBytes(Charsets.UTF_8);
             } else {
                 replyWithNotFound(exchange);
                 return;
@@ -88,6 +90,32 @@ final class StatusServer implements HttpHandler {
                 TernaryStatusRegister.FENSTER_OFFEN.status() == RegisterState.HIGH);
         return gson.get().toJson(map) + "\n";
     }
+
+    public static String spaceapi() {
+        final Map<String, Object> map = new HashMap<>();
+        map.put("api", "0.12");
+        map.put("space", "Entropia");
+        map.put("logo", "https://entropia.de/wiki/images/c/ca/Tetrisknoten_Logo.png");
+        map.put("url", "https://entropia.de/");
+      	map.put("adress", "Entropia e.V., Gewerbehof, Steinstraße 23, 76133 Karlsruhe, Germany");
+        map.put("lat", 49.0067);
+      	map.put("lon", -8.407438);
+        map.put("open",
+                TernaryStatusRegister.CLUB_OFFEN.status() == RegisterState.HIGH);
+        final Map<String, Object> icon = new HashMap<>();
+        	icon.put("open", "https://entropia.de/wiki/images/3/34/Entropia-wiki-logo-status-green.png");
+        	icon.put("closed", "https://entropia.de/wiki/images/1/15/Entropia-wiki-logo-status-red.png");
+        map.put("icon", icon);
+        map.put("last_event", TimeUtils.timestamp());
+        final Map<String, Object> contact = new HashMap<>();
+        	contact.put("phone", "+49 721 5604732");
+        	contact.put("irc", "irc://irc.hackint.eu/#entropia");
+        	contact.put("email", "info@entropia.de");
+        	contact.put("ml", "news@entropia.de");
+        map.put("contact", contact);
+        return gson.get().toJson(map) + "\n";
+    }
+
     
     private static Gson newGson() {
         return Null.assertNonNull(new GsonBuilder().disableHtmlEscaping()
