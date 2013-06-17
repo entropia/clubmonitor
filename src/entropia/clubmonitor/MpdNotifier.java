@@ -91,25 +91,17 @@ final class MpdNotifier extends PublicOnlyTrigger implements Runnable {
 	final String name = Thread.currentThread().getName();
         while (!Thread.interrupted()) {
             try {
-                try (final Socket socket = initSocket()) {
-                    final BufferedReader in = new BufferedReader(
-                            new InputStreamReader(socket.getInputStream()));
-                    try {
-                        final BufferedWriter out = new BufferedWriter(
-                                new OutputStreamWriter(
-                                        socket.getOutputStream()));
-                        try {
+                try (final Socket socket = initSocket();
+                     final BufferedReader in = new BufferedReader(
+                             new InputStreamReader(socket.getInputStream()));
+                     final BufferedWriter out = new BufferedWriter(
+                             new OutputStreamWriter(
+                                     socket.getOutputStream()))) {
                             checkHeader(in);
                             checkConnection(in, out);
                             while (true) {
                                 process(in, out);
                             }
-                        } finally {
-                            out.close();
-                        }
-                    } finally {
-                        in.close();
-                    }
                 } catch (final IOException e) {
                     logger.warn(String.format("exeption in %s. Sleeping for" +
                     		" %d milliseconds.",
@@ -118,7 +110,7 @@ final class MpdNotifier extends PublicOnlyTrigger implements Runnable {
                     logger.warn(name + " is ready again for sending commands.");
                 }
             } catch (final InterruptedException e) {
-                Thread.currentThread().interrupt();
+                    Thread.currentThread().interrupt();
             }
         }
     }
