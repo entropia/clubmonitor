@@ -85,9 +85,7 @@ public enum Config {
     @DirectoryTest
     @MaybeNull
     CLUB_KEY_SVN_REPO,
-    @MaybeNull
     CLUB_KEY_API_USERNAME,
-    @MaybeNull
     CLUB_KEY_API_PASSWORD,
     
     @BooleanTest
