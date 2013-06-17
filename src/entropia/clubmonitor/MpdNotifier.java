@@ -91,8 +91,7 @@ final class MpdNotifier extends PublicOnlyTrigger implements Runnable {
 	final String name = Thread.currentThread().getName();
         while (!Thread.interrupted()) {
             try {
-                final Socket socket = initSocket();
-                try {
+                try (final Socket socket = initSocket()) {
                     final BufferedReader in = new BufferedReader(
                             new InputStreamReader(socket.getInputStream()));
                     try {
@@ -117,11 +116,7 @@ final class MpdNotifier extends PublicOnlyTrigger implements Runnable {
                 	    name, RETRY_TIMEOUT), e);
                     Thread.sleep(RETRY_TIMEOUT);
                     logger.warn(name + " is ready again for sending commands.");
-                } finally {
-                    socket.close();
                 }
-            } catch (final IOException e) {
-                logger.error("exception in " + name, e);
             } catch (final InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
