@@ -102,18 +102,18 @@ final class StatusServer implements HttpHandler {
       	map.put("lon", -8.407438);
         map.put("open",
                 TernaryStatusRegister.CLUB_OFFEN.status() == RegisterState.HIGH);
+        final Map<String, Object> contact = new HashMap<>();
+	    	contact.put("phone", "+49 721 5604732");
+	    	contact.put("irc", "irc://irc.hackint.eu/#entropia");
+	    	contact.put("email", "info@entropia.de");
+	    	contact.put("ml", "news@entropia.de");
+        map.put("contact", contact);
         map.put("logo", "https://entropia.de/wiki/images/c/ca/Tetrisknoten_Logo.png");
         final Map<String, Object> icon = new HashMap<>();
         	icon.put("open", "https://entropia.de/wiki/images/3/34/Entropia-wiki-logo-status-green.png");
         	icon.put("closed", "https://entropia.de/wiki/images/1/15/Entropia-wiki-logo-status-red.png");
         map.put("icon", icon);
         map.put("last_event", TimeUtils.timestamp());
-        final Map<String, Object> contact = new HashMap<>();
-        	contact.put("phone", "+49 721 5604732");
-        	contact.put("irc", "irc://irc.hackint.eu/#entropia");
-        	contact.put("email", "info@entropia.de");
-        	contact.put("ml", "news@entropia.de");
-        map.put("contact", contact);
         return gson.get().toJson(map) + "\n";
     }
 
