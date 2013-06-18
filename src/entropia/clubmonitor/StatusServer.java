@@ -12,6 +12,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
@@ -92,16 +93,16 @@ final class StatusServer implements HttpHandler {
     }
 
     public static String spaceapi() {
-        final Map<String, Object> map = new HashMap<>();
+        final Map<String, Object> map = new LinkedHashMap<>();
         map.put("api", "0.12");
         map.put("space", "Entropia");
-        map.put("logo", "https://entropia.de/wiki/images/c/ca/Tetrisknoten_Logo.png");
         map.put("url", "https://entropia.de/");
-      	map.put("adress", "Entropia e.V., Gewerbehof, Steinstraße 23, 76133 Karlsruhe, Germany");
+        map.put("adress", "Entropia e.V., Gewerbehof, Steinstraße 23, 76133 Karlsruhe, Germany");
         map.put("lat", 49.0067);
       	map.put("lon", -8.407438);
         map.put("open",
                 TernaryStatusRegister.CLUB_OFFEN.status() == RegisterState.HIGH);
+        map.put("logo", "https://entropia.de/wiki/images/c/ca/Tetrisknoten_Logo.png");
         final Map<String, Object> icon = new HashMap<>();
         	icon.put("open", "https://entropia.de/wiki/images/3/34/Entropia-wiki-logo-status-green.png");
         	icon.put("closed", "https://entropia.de/wiki/images/1/15/Entropia-wiki-logo-status-red.png");
