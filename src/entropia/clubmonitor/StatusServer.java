@@ -113,7 +113,7 @@ final class StatusServer implements HttpHandler {
         	icon.put("open", "https://entropia.de/wiki/images/3/34/Entropia-wiki-logo-status-green.png");
         	icon.put("closed", "https://entropia.de/wiki/images/1/15/Entropia-wiki-logo-status-red.png");
         map.put("icon", icon);
-        map.put("last_event", TimeUtils.timestamp());
+        map.put("last_event", TernaryStatusRegister.lastEvent());
         return gson.get().toJson(map) + "\n";
     }
 
