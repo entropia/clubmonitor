@@ -99,7 +99,7 @@ final class StatusServer implements HttpHandler {
         map.put("url", "https://entropia.de/");
         map.put("adress", "Entropia e.V., Gewerbehof, Steinstraße 23, 76133 Karlsruhe, Germany");
         map.put("lat", 49.0067);
-      	map.put("lon", -8.407438);
+      	map.put("lon", 8.407438);
         map.put("open",
                 TernaryStatusRegister.CLUB_OFFEN.status() == RegisterState.HIGH);
         final Map<String, Object> contact = new HashMap<>();
