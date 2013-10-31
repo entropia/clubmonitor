@@ -86,7 +86,7 @@ final class StatusServer implements HttpHandler {
                 TernaryStatusRegister.CLUB_OFFEN.status() == RegisterState.HIGH);
         final String timestamp = timestampFormat.format(new Date(
                 TimeUnit.SECONDS.toMillis(TernaryStatusRegister.lastEvent())));
-        map.put("lastchange", timestamp);
+        map.put("last_event", timestamp);
         map.put("fenster_offen",
                 TernaryStatusRegister.FENSTER_OFFEN.status() == RegisterState.HIGH);
         return gson.get().toJson(map) + "\n";
@@ -113,7 +113,7 @@ final class StatusServer implements HttpHandler {
         	icon.put("open", "https://entropia.de/wiki/images/3/34/Entropia-wiki-logo-status-green.png");
         	icon.put("closed", "https://entropia.de/wiki/images/1/15/Entropia-wiki-logo-status-red.png");
         map.put("icon", icon);
-        map.put("last_event", TernaryStatusRegister.lastEvent());
+        map.put("lastchange", TernaryStatusRegister.lastEvent());
         return gson.get().toJson(map) + "\n";
     }
 
