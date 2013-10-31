@@ -86,7 +86,7 @@ final class StatusServer implements HttpHandler {
                 TernaryStatusRegister.CLUB_OFFEN.status() == RegisterState.HIGH);
         final String timestamp = timestampFormat.format(new Date(
                 TimeUnit.SECONDS.toMillis(TernaryStatusRegister.lastEvent())));
-        map.put("last_event", timestamp);
+        map.put("lastchange", timestamp);
         map.put("fenster_offen",
                 TernaryStatusRegister.FENSTER_OFFEN.status() == RegisterState.HIGH);
         return gson.get().toJson(map) + "\n";
