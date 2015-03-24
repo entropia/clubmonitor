@@ -124,7 +124,6 @@ public enum Config {
     @BooleanTest
     @Default("false")
     MQTT_ENABLE,
-    @URLTest
     @MaybeNullIfFalse(MQTT_ENABLE)
     MQTT_URL,
     @MaybeNullIfFalse(MQTT_ENABLE)
@@ -552,17 +551,9 @@ public enum Config {
 	        MQTT_ENABLE.toString()));
     }
 
-    public static @Nullable URL getMQTTURL() {
-	try {
-	    final String property = PROPERTIES.getProperty(
-	            MQTT_URL.toString());
-	    if (property == null) {
-		return null;
-	    }
-	    return new URL(property);
-	} catch (MalformedURLException e) {
-	    return null;
-	}
+    public static String getMQTTURL() {
+        return Null.assertNonNull(PROPERTIES.getProperty(
+                MQTT_URL.toString()));
     }
 
     public static String getMQTTUser() {

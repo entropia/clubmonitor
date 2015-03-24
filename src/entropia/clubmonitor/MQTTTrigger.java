@@ -41,7 +41,7 @@ public class MQTTTrigger extends PublicOnlyTrigger implements Runnable {
     private static MqttClient initConnection() throws MqttException {
 	    final MemoryPersistence persistence = new MemoryPersistence();
 	    final MqttClient client = new MqttClient(
-			    Config.getMQTTURL().toString(),
+			    Config.getMQTTURL(),
 			    "clubmonitor",
 			    persistence);
 
