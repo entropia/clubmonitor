@@ -17,7 +17,7 @@ import entropia.clubmonitor.TernaryStatusRegister.RegisterState;
 
 public class MQTTTrigger extends PublicOnlyTrigger implements Runnable {
     private static final Logger logger =
-	    LoggerFactory.getLogger(ClubBusTrigger.class);
+	    LoggerFactory.getLogger(MQTTTrigger.class);
     
     enum Status {
 	OPEN,
