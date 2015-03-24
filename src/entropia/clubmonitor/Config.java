@@ -120,6 +120,16 @@ public enum Config {
     @URLTest
     @MaybeNullIfFalse(CLUB_BUS_ENABLE)
     CLUB_BUS_URL,
+
+    @BooleanTest
+    @Default("false")
+    MQTT_ENABLE,
+    @MaybeNullIfFalse(MQTT_ENABLE)
+    MQTT_URL,
+    @MaybeNullIfFalse(MQTT_ENABLE)
+    MQTT_USER,
+    @MaybeNullIfFalse(MQTT_ENABLE)
+    MQTT_PASSWORD
     ;
     
     @Retention(RetentionPolicy.RUNTIME)
@@ -534,5 +544,25 @@ public enum Config {
 	} catch (MalformedURLException e) {
 	    return null;
 	}
+    }
+
+    public static boolean isMQTTEnabled() {
+	return Boolean.parseBoolean(PROPERTIES.getProperty(
+	        MQTT_ENABLE.toString()));
+    }
+
+    public static String getMQTTURL() {
+        return Null.assertNonNull(PROPERTIES.getProperty(
+                MQTT_URL.toString()));
+    }
+
+    public static String getMQTTUser() {
+        return Null.assertNonNull(PROPERTIES.getProperty(
+                MQTT_USER.toString()));
+    }
+
+    public static String getMQTTPassword() {
+        return Null.assertNonNull(PROPERTIES.getProperty(
+                MQTT_PASSWORD.toString()));
     }
 }

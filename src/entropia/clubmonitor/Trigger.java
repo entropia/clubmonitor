@@ -21,7 +21,8 @@ public abstract class Trigger {
 		    new ClubStatusTransition(),
 		    new XMPPNotifier(),
 		    new MpdNotifier(),
-		    new ClubBusTrigger()));
+		    new ClubBusTrigger(),
+		    new MQTTTrigger()));
 	if (Config.isMulticastEnabled()) {
 	    c.add(new MulticastNotifier());
 	}
