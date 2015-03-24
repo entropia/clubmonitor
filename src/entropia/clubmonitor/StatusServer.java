@@ -108,7 +108,7 @@ final class StatusServer implements HttpHandler {
 	    	contact.put("email", "info@entropia.de");
 	    	contact.put("ml", "news@entropia.de");
         map.put("contact", contact);
-        map.put("logo", "https://entropia.de/wiki/images/c/ca/Tetrisknoten_Logo.png");
+        map.put("logo", "https://entropia.de/wiki/images/e/ed/Teebeutel1_noev.png");
         final Map<String, Object> icon = new HashMap<>();
         	icon.put("open", "https://entropia.de/wiki/images/3/34/Entropia-wiki-logo-status-green.png");
         	icon.put("closed", "https://entropia.de/wiki/images/1/15/Entropia-wiki-logo-status-red.png");
