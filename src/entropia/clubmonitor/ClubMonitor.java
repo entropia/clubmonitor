@@ -20,6 +20,7 @@ public final class ClubMonitor {
     private static Thread netioPoller;
     private static Thread mpdThread;
     private static Thread clubBusTriggerThread;
+    private static Thread MQTTTriggerThread;
     private static WebServer webServer;
     
     private static final SyncService SYNC_SERVICE = new SyncService();
@@ -45,6 +46,9 @@ public final class ClubMonitor {
 	}
 	if (Config.isClubBusEnabled()) {
 	    clubBusTriggerThread = ClubBusTrigger.startClubBusTrigger();
+	}
+	if (Config.isMQTTEnabled()) {
+	    MQTTTriggerThread = MQTTTrigger.startMQTTTrigger();
 	}
 	webServer = new WebServer(Null.assertNonNull(SYNC_SERVICE));
 	webServer.startWebServer();
