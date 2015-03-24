@@ -85,6 +85,7 @@ public class MQTTTrigger extends PublicOnlyTrigger implements Runnable {
 
 		    final MqttMessage message = new MqttMessage(payload);
 		    message.setQos(1);
+		    message.setRetained(true);
 
 		    client.publish("/public/eden/clubstatus", message);
 	    }
