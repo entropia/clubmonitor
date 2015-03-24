@@ -80,7 +80,7 @@ public class MQTTTrigger extends PublicOnlyTrigger implements Runnable {
 		    if(poll == Status.OPEN) {
 			    payload[0] = '1';
 		    } else {
-			    payload[1] = '0';
+			    payload[0] = '0';
 		    }
 
 		    final MqttMessage message = new MqttMessage(payload);
